@@ -1,0 +1,1157 @@
+{
+  "name": "Atendimento ticket",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensagem_email }}",
+        "options": {
+          "systemMessage": "Você é um assistente virtual especializado em atendimento ao cliente da Brokers.\nSua missão é responder tickets de suporte com clareza, cordialidade e profissionalismo, utilizando informações verificadas na base de conhecimento (via tool) para garantir que as respostas sejam corretas e atualizadas.\n\nRegras para elaboração da resposta:\n\n1. Utilize linguagem simples, educada e objetiva, evitando termos técnicos desnecessários.\n\n2. Mantenha sempre um tom amigável e prestativo.\n\n3. Responda apenas com base em informações confirmadas na base de conhecimento; se a resposta não for encontrada, solicite a equipe humana.\n\n4. Organize o texto de forma clara, usando parágrafos curtos e, se necessário, listas para facilitar a leitura.\n\n5. Não invente informações ou faça suposições.\n\n6. Finalize sempre com a frase:\n\"Atenciosamente,\nEElisa Assistente Virtual Equipe Brokers.\nNos chame no WhatsApp: wa.me/5545999787039\" \n\n7. Sempre comece o email com \"Bom Dia\" ou \"Boa tarde\".\n\n8. Duvidas sobre pagamento, fatura, cobrança, vigência, plano orientar o cliente a entrar em contato no número do Financeiro: wa.me/5545999787039\n\n9. Sempre que receber uma solicitação de cancelamento, responda: \"Agradecemos pelo seu contato. \nInformamos que nosso time se encontra de recesso e retornará no dia 05/01/2026.\n\nPara dúvidas relacionadas a pagamento, fatura, cobrança, vigência ou plano, pedimos que entre em contato diretamente com o nosso setor Financeiro pelo WhatsApp: wa.me/5545999787039. \n\nAssim, nossa equipe especializada poderá verificar sua assinatura e esclarecer qualquer questão referente a sua solicitação quando retornar.\n\nPermanecemos à disposição para ajudar no que for necessário.\nConte conosco!\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1568,
+        144
+      ],
+      "id": "3a2dc41c-2667-46ae-a5b7-8e0dda997895",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        416
+      ],
+      "id": "3a9f647d-a9d3-43ca-8f57-cf4e1550976f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "oUZLVhPbKDyq7ZJK",
+          "name": "OpenAi Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1744,
+        608
+      ],
+      "id": "d4e7d85d-653b-4a9e-a26e-52648aa9d490",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "oUZLVhPbKDyq7ZJK",
+          "name": "OpenAi Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "utilize esta base, para identificar as objeções e problemas que o cliente falou, e identifique a melhor resposta para contornar ela.\nBusque por similaridade e foco em trazer todas as informações relevantes, busque sempre os dados mais atualizado, utilizando a data do metadata data_envio, traga sempre os mais atuais primeiro.",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "Gabi_brokers_vector_store",
+          "mode": "list",
+          "cachedResultName": "Gabi_brokers_vector_store"
+        },
+        "topK": 6,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        1632,
+        432
+      ],
+      "id": "ed70ab31-f2a7-447d-8f3e-c1b540c53b52",
+      "name": "BASE_DE_CONHECIMENTO",
+      "credentials": {
+        "qdrantApi": {
+          "id": "O1wkf61RWjrG9ex0",
+          "name": "QdrantApi Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d46eb43a-9f9e-4a36-97f1-00ed2f65cc32",
+              "leftValue": "={{ $json.group_id }}",
+              "rightValue": 67000574208,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "2c15a964-ae67-46a1-8c59-ecc100bacd76",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": 2,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        -144
+      ],
+      "id": "adbc2e41-1aa7-4d9e-9ad7-9c3a21113a33",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5c8f07bb-6cce-479c-90ba-77e376f8cc6e",
+              "name": "id_ticket",
+              "value": "={{ $json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "eaa9ef73-c3a3-4594-a91c-4d5ace8ec4bf",
+              "name": "Assunto",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "2d6f3262-b084-4ec3-a768-a1b24ffdb599",
+              "name": "mensagem_email",
+              "value": "={{ $json.description_text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        144
+      ],
+      "id": "2582aa06-b8dc-4115-a6fb-605c978b2e29",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "ticketId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        576,
+        -144
+      ],
+      "id": "058df29c-845a-4090-b28e-e5c3860393ee",
+      "name": "Get_ticket",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ce2c4139-5d67-4542-8632-f5b3b8ef83fc",
+                    "leftValue": "={{ $json.data['Decisão'] }}",
+                    "rightValue": "Assumir Manual",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Assumir"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data['Decisão'] }}",
+                    "rightValue": "=Aprovado",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "182ffcd7-d94b-4dee-8d7f-33ab068750db"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Aprovado"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "170b269f-f5f1-4554-9a6e-240acb8d56fc",
+                    "leftValue": "={{ $json.data['Decisão'] }}",
+                    "rightValue": "=Reprovado",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Reprovado"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2416,
+        128
+      ],
+      "id": "1046515d-eb1a-4600-aea1-221fd4d3c4e5",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2992,
+        736
+      ],
+      "id": "1f2c2929-e967-43a9-abaf-2894b4ba7c1b",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "oUZLVhPbKDyq7ZJK",
+          "name": "OpenAi Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "spaceId": "spaces/AAQApxYCYQ4",
+        "message": "=Titulo: \"🤖 Validação de Resposta\",\nAssunto: Ticket #{{ $('Get_ticket').first().json.id }} - {{ $('Get_ticket').first().json.subject }}\"\n       \nPergunta do Cliente: {{ $('Get_ticket').first().json.description_text }}\"\n\n\"Sugestão da IA: {{ $json.final_response }}",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Decisão",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Aprovado"
+                  },
+                  {
+                    "option": "Reprovado"
+                  },
+                  {
+                    "option": "Assumir Manual"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleChat",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        144
+      ],
+      "id": "e6bd703d-15af-4174-82ff-098355ce19f6",
+      "name": "First validation",
+      "webhookId": "adbab6bc-3842-4546-bf9e-c7b758573696",
+      "credentials": {
+        "googleApi": {
+          "id": "Ujbtxf4R4c79VjLz",
+          "name": "Chat account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "spaceId": "spaces/AAQApxYCYQ4",
+        "message": "=Certo. Por favor, escreva suas instruções de correção como uma resposta a esta mensagem.\n\nTicket # {{ $('Switch1').first().json.id }} - {{ $('Switch1').first().json.subject }} ",
+        "responseType": "freeText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleChat",
+      "typeVersion": 1,
+      "position": [
+        2816,
+        416
+      ],
+      "id": "52fde503-c507-4e0f-a471-d1ab860cf1fb",
+      "name": "Secont validation",
+      "webhookId": "9fbea15e-dbd2-4c35-b40b-2e18365bb581",
+      "credentials": {
+        "googleApi": {
+          "id": "Ujbtxf4R4c79VjLz",
+          "name": "Chat account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Você é um especialista em redação profissional de e-mails para atendimento ao cliente da Brokers.\nSua função é revisar as respostas de acordo com o feedback enviado por um atendente humano, garantindo que o texto final esteja claro, cordial e alinhado ao padrão da empresa.\n\nRascunho Original: {{ $('AI Agent').first().json.output }}\nFeedback do atendente: {{ $json.data.text }}\n\nInstruções:\n\n1. Leia atentamente o rascunho original e o feedback do atendente.\n\n2. Ajuste o texto de forma precisa e objetiva, incorporando todas as alterações solicitadas.\n\n3. Mantenha o tom profissional, educado e prestativo.\n\n4. Preserve a clareza, usando frases curtas e diretas.\n\n5. Corrija erros gramaticais, de digitação e de formatação.\n\n6. Nunca remova informações importantes nem adicione conteúdo não solicitado pelo atendente.\n\n7. Sempre finalize com a assinatura:\n\"Atenciosamente,\nEElisa Assistente Virtual Equipe Brokers.\nNos chame no WhatsApp: wa.me/5545999787039\" \n\n8. Sempre comece com \"Bom Dia\" ou \"Boa tarde\"",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        3072,
+        448
+      ],
+      "id": "31d7a622-87f3-4532-8714-e5bb1a6df481",
+      "name": "AI revision agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega todos os itens que vieram do nó 'AI Agent' ou 'AI revision agent'\nconst inputItems = $input.all();\n\n// Pega a lista original de tickets do nó 'Get_ticket' para garantir a correspondência\nconst originalTickets = $items(\"Get_ticket\");\n\nconst results = [];\n\n// Itera sobre cada item que chegou neste nó (seja do AI Agent ou do AI revision agent)\nfor (let i = 0; i < inputItems.length; i++) {\n  const currentItem = inputItems[i].json;\n  \n  // Encontra o ticket original correspondente pelo índice.\n  // Isso garante que estamos associando a resposta ao ticket certo.\n  const originalTicketData = originalTickets[i] ? originalTickets[i].json : {};\n\n  // A resposta da IA estará no campo 'output' do item atual.\n  // Não precisamos mais checar de qual agente veio, pois o loop já nos isolou.\n  const finalResponse = currentItem.output || \"Nenhuma resposta válida foi gerada.\";\n\n  // Monta o objeto final, combinando os dados do ticket original com a nova resposta.\n  const finalItem = {\n    ...originalTicketData,\n    final_response: finalResponse\n  };\n  \n  results.push({ json: finalItem });\n}\n\n// Retorna uma lista de itens, um para cada ticket processado.\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        144
+      ],
+      "id": "0a6358a8-7fb8-4937-9128-8dbcf92d2a3a",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "ticketId": "={{ $('Get_ticket').first().json.id }}",
+        "updateFields": {
+          "product": 67000001400,
+          "status": "resolved"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        3232,
+        144
+      ],
+      "id": "47a4ff0c-0c73-4cfe-b95f-f57f672c7637",
+      "name": "Update a ticket",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshdesk.com/api/v2/tickets/{{ $('Get_ticket').first().json.id }}/reply",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"body\": {{ JSON.stringify($json.body) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3008,
+        144
+      ],
+      "id": "9081f0fb-ed69-4ed2-ba53-33338d7767e2",
+      "name": "Envio de Email",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "ijjm68eZGqxETHiw",
+          "name": "API FreshDesk"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "ticketId": "={{ $('Get_ticket').first().json.id }}",
+        "updateFields": {
+          "product": 67000001400,
+          "status": "pending",
+          "type": "=Automatico"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        144
+      ],
+      "id": "c8dd0512-8f1e-42b9-ba45-5aa5fb679a07",
+      "name": "Update - reserva",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  // 1. CAPTURA DOS DADOS\n  const aiResponse = $('Code').first().json.final_response;\n  const ticketData = $('Get_ticket').first().json;\n  \n  // 2. FUNÇÃO DE CONVERSÃO SIMPLIFICADA\n  function convertToHTML(text) {\n    if (typeof text !== 'string') {\n      text = String(text);\n    }\n    \n    // Converte quebras de linha duplas em parágrafos\n    let paragraphs = text.split('\\n\\n');\n    let html = paragraphs.map(p => {\n      if (p.trim()) {\n        // Converte URLs em links clicáveis\n        p = p.replace(/(https?:\\/\\/[^\\s<]+)/g, '<a href=\"$1\" target=\"_blank\">$1</a>');\n        // Converte quebras de linha simples em <br>\n        p = p.replace(/\\n/g, '<br>');\n        return `<p>${p}</p>`;\n      }\n      return '';\n    }).filter(p => p).join('\\n');\n    \n    return html;\n  }\n  \n  // 3. GERA O HTML\n  const htmlContent = convertToHTML(aiResponse);\n  \n  // 4. TEMPLATE HTML PARA FRESHDESK\n  const htmlBody = `<div style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333;\">\n${htmlContent}\n<br><br>\n<p>Atenciosamente,<br>\n<strong>Equipe Brokers</strong><br>\nEEmovel Brokers<br>\nsuporte@eemovel.com.br</p>\n</div>`;\n  \n  // 5. RETORNA O JSON NO FORMATO FRESHDESK\n  return {\n    json: {\n      body: htmlBody,\n      ticketId: ticketData.id,\n      requesterEmail: ticketData.requester ? ticketData.requester.email : ticketData.email\n    }\n  };\n  \n} catch (error) {\n  throw new Error(`Erro ao processar resposta: ${error.message}`);\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2800,
+        144
+      ],
+      "id": "1ba92620-e0d5-4660-a7d8-12854bc01c66",
+      "name": "Transformer"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "895e1889-6067-4298-8a45-30b9bccbeb82",
+                    "leftValue": "={{ $json.description_text }}",
+                    "rightValue": "/cancelar|cancelamento/i",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Cancelamento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "239b2d4b-2933-43dd-a526-01f47f1529f4",
+                    "leftValue": "={{ $json.subject }}",
+                    "rightValue": "/cobrança|fatura|pagamento|plano|estorno|boleto|renovação/i",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Retenção"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e0a823a5-56e5-4592-ad2f-2dad45651fdb",
+                    "leftValue": "={{ $json.subject }}",
+                    "rightValue": "/Revogação|Dados/i",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "DPO"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0171bbff-4b95-46da-8d80-90d64e38446b",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Suporte"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        800,
+        -176
+      ],
+      "id": "238d1139-78aa-49d9-9035-537f564d717d",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "ticketId": "={{ $('Get_ticket').first().json.id }}",
+        "updateFields": {
+          "product": 67000001400,
+          "status": "pending",
+          "type": "=Configuração de conta"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        -80
+      ],
+      "id": "a6e0c4f5-471f-4723-88be-9984df0662f7",
+      "name": "Update - Assumir manual",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        176,
+        -144
+      ],
+      "id": "c0daa2c5-e348-4f70-8b6f-aa9911211a5a",
+      "name": "Get many tickets1",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        -144
+      ],
+      "id": "e049e4e2-4481-483d-96d5-735981d4af12",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshdesk.com/api/v2/tickets/{{ $('Get_ticket').first().json.id }}/reply",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"body\": {{ JSON.stringify($json.body) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        -448
+      ],
+      "id": "b058cd9b-38ec-4133-a3f2-84948cc587a1",
+      "name": "Envio de Email1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "ijjm68eZGqxETHiw",
+          "name": "API FreshDesk"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  // 1. MENSAGEM FIXA PARA SER FORMATADA\n  // Em vez de buscar de outro nó, definimos o texto aqui.\n  const mensagemFixa = `{{saudacao}}.\n\nOlá! 😊\n\nInformamos que nosso time está em recesso e retornará às atividades no dia 05/01. Ainda assim, deixamos abaixo as orientações para te ajudar.\n\nRecebemos sua solicitação de cancelamento do plano.\n\nSe precisar de ajuda ou tiver dúvidas, nossa equipe está disponível no WhatsApp:\n👉 wa.me/5545999363366\n\n⚠️ Importante:\n\nCompras feitas há menos de 7 dias devem ser canceladas diretamente pelo WhatsApp.\n\nPara contratos com mais tempo de uso, a compra estará fora do prazo de estorno. Nesse caso, basta aguardar o fim da vigência e optar por não renovar.\n\nVocê pode conferir a data final em: Minha Conta > Assinaturas.\n\n🔁 Para não renovar:\n\nBoleto: é só ignorar a nova fatura.\n\nCartão: responda este e-mail para removermos a cobrança automática.\n\n💳 Sobre o parcelamento no cartão: o banco paga o valor integral no ato, por isso as parcelas seguem sendo cobradas até a quitação.\n\nFicamos à disposição para ajudar no que precisar.\nConte conosco!`;\n\n  // Processa a saudação dinâmica (\"Bom dia\" ou \"Boa tarde\")\n  const horaAtual = new Date().getHours();\n  const saudacao = horaAtual < 12 ? 'Bom dia' : 'Boa tarde';\n  const aiResponse = mensagemFixa.replace('{{saudacao}}', saudacao);\n\n  // Tenta capturar os dados do ticket, com um fallback para evitar erros\n  let ticketData;\n  try {\n    ticketData = $('Get_ticket').first().json;\n  } catch (e) {\n    console.warn(\"Nó 'Get_ticket' não encontrado. Usando dados de fallback.\");\n    ticketData = { id: 'N/A', email: 'cliente@exemplo.com' };\n  }\n  \n  // 2. FUNÇÃO DE CONVERSÃO OTIMIZADA\n  function convertToHTML(text) {\n    if (typeof text !== 'string') {\n      text = String(text);\n    }\n    \n    // Converte quebras de linha duplas em parágrafos\n    let paragraphs = text.split('\\n\\n');\n    let html = paragraphs.map(p => {\n      if (p.trim()) {\n        p = p.trim(); // Remove espaços extras\n        // Converte URLs em links clicáveis\n        p = p.replace(/(https?:\\/\\/[^\\s<]+)/g, '<a href=\"$1\" target=\"_blank\" style=\"color: #0066cc;\">$1</a>');\n        // Converte e-mails em links clicáveis\n        p = p.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)/g, '<a href=\"mailto:$1\" style=\"color: #0066cc;\">$1</a>');\n        // Converte quebras de linha simples em <br>\n        p = p.replace(/\\n/g, '<br>');\n        return `<p style=\"margin-bottom: 1em;\">${p}</p>`;\n      }\n      return '';\n    }).filter(p => p).join(''); // Remove o '\\n' entre os <p> para um HTML mais limpo\n    \n    return html;\n  }\n  \n  // 3. GERA O HTML\n  const htmlContent = convertToHTML(aiResponse);\n  \n  // 4. TEMPLATE HTML PARA FRESHDESK (COM ASSINATURA PADRÃO)\n  const htmlBody = `<div style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333;\">\n${htmlContent}\n<p style=\"margin-top: 2em;\">Atenciosamente,<br>\nEElisa Assistente Virtual Equipe EEmovel Brokers<br>\nNos chame no WhatsApp: wa.me/5545999787039<br>\n<a href=\"mailto:suporte@eemovel.com.br\" style=\"color: #0066cc;\">suporte@eemovel.com.br</a></p>\n</div>`;\n  \n  // 5. RETORNA O JSON NO FORMATO FRESHDESK\n  return {\n    json: {\n      body: htmlBody,\n      ticketId: ticketData.id,\n      requesterEmail: ticketData.requester ? ticketData.requester.email : ticketData.email\n    }\n  };\n  \n} catch (error) {\n  // Retorna um erro formatado para facilitar o debug no n8n\n  return {\n      json: {\n          error: true,\n          message: `Erro ao processar resposta: ${error.message}`,\n          stack: error.stack\n      }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        -448
+      ],
+      "id": "f7d5af7a-42c3-428c-8557-59ac128d8a32",
+      "name": "Transformer1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "ticketId": "={{ $('Get_ticket').first().json.id }}",
+        "updateFields": {
+          "product": 67000001400,
+          "status": "resolved",
+          "type": "=Automatico Cancelamento"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        -448
+      ],
+      "id": "df392b67-43c8-4916-947e-02fa058fd36f",
+      "name": "Update - reserva1",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "ticketId": "={{ $('Get_ticket').first().json.id }}",
+        "updateFields": {
+          "group": 67000574208,
+          "product": 67000001400,
+          "status": "resolved",
+          "type": "=Automatico"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        -48
+      ],
+      "id": "16abf367-5a1a-4652-9832-4f5d0cbb7041",
+      "name": "Update -DPO",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshdesk.com/api/v2/tickets/{{ $('Get_ticket').first().json.id }}/reply",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"body\": {{ JSON.stringify($json.body) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        -240
+      ],
+      "id": "6a578369-0a09-4c5e-9b27-b2aeb4a2009f",
+      "name": "Envio de Email2",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "ijjm68eZGqxETHiw",
+          "name": "API FreshDesk"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  // 1. MENSAGEM FIXA PARA SER FORMATADA\n  // Em vez de buscar de outro nó, definimos o texto aqui.\n  const mensagemFixa = `{{saudacao}}.\n\nAgradecemos pelo seu contato. \nInformamos que nosso time se encontra de recesso e retornará no dia 05/01/2026.\n\nPara dúvidas relacionadas a pagamento, fatura, cobrança, vigência ou plano, pedimos que entre em contato diretamente com o nosso setor Financeiro pelo WhatsApp: wa.me/5545999787039. \n\nAssim, nossa equipe especializada poderá verificar sua assinatura e esclarecer qualquer questão referente a sua solicitação quando retornar.\n\nPermanecemos à disposição para ajudar no que for necessário.\nConte conosco!`;\n\n  // Processa a saudação dinâmica (\"Bom dia\" ou \"Boa tarde\")\n  const horaAtual = new Date().getHours();\n  const saudacao = horaAtual < 12 ? 'Bom dia' : 'Boa tarde';\n  const aiResponse = mensagemFixa.replace('{{saudacao}}', saudacao);\n\n  // Tenta capturar os dados do ticket, com um fallback para evitar erros\n  let ticketData;\n  try {\n    ticketData = $('Get_ticket').first().json;\n  } catch (e) {\n    console.warn(\"Nó 'Get_ticket' não encontrado. Usando dados de fallback.\");\n    ticketData = { id: 'N/A', email: 'cliente@exemplo.com' };\n  }\n  \n  // 2. FUNÇÃO DE CONVERSÃO OTIMIZADA\n  function convertToHTML(text) {\n    if (typeof text !== 'string') {\n      text = String(text);\n    }\n    \n    // Converte quebras de linha duplas em parágrafos\n    let paragraphs = text.split('\\n\\n');\n    let html = paragraphs.map(p => {\n      if (p.trim()) {\n        p = p.trim(); // Remove espaços extras\n        // Converte URLs em links clicáveis\n        p = p.replace(/(https?:\\/\\/[^\\s<]+)/g, '<a href=\"$1\" target=\"_blank\" style=\"color: #0066cc;\">$1</a>');\n        // Converte e-mails em links clicáveis\n        p = p.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)/g, '<a href=\"mailto:$1\" style=\"color: #0066cc;\">$1</a>');\n        // Converte quebras de linha simples em <br>\n        p = p.replace(/\\n/g, '<br>');\n        return `<p style=\"margin-bottom: 1em;\">${p}</p>`;\n      }\n      return '';\n    }).filter(p => p).join(''); // Remove o '\\n' entre os <p> para um HTML mais limpo\n    \n    return html;\n  }\n  \n  // 3. GERA O HTML\n  const htmlContent = convertToHTML(aiResponse);\n  \n  // 4. TEMPLATE HTML PARA FRESHDESK (COM ASSINATURA PADRÃO)\n  const htmlBody = `<div style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333;\">\n${htmlContent}\n<p style=\"margin-top: 2em;\">Atenciosamente,<br>\nEElisa Assistente Virtual Equipe EEmovel Brokers<br>\nNos chame no WhatsApp: wa.me/5545999787039<br>\n<a href=\"mailto:suporte@eemovel.com.br\" style=\"color: #0066cc;\">suporte@eemovel.com.br</a></p>\n</div>`;\n  \n  // 5. RETORNA O JSON NO FORMATO FRESHDESK\n  return {\n    json: {\n      body: htmlBody,\n      ticketId: ticketData.id,\n      requesterEmail: ticketData.requester ? ticketData.requester.email : ticketData.email\n    }\n  };\n  \n} catch (error) {\n  // Retorna um erro formatado para facilitar o debug no n8n\n  return {\n      json: {\n          error: true,\n          message: `Erro ao processar resposta: ${error.message}`,\n          stack: error.stack\n      }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        -240
+      ],
+      "id": "603aa36e-d462-4340-9d00-b37f08670fb0",
+      "name": "Transformer2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "ticketId": "={{ $('Get_ticket').first().json.id }}",
+        "updateFields": {
+          "product": 67000001400,
+          "status": "resolved",
+          "type": "=Automatico Cancelamento"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        -240
+      ],
+      "id": "e7c2ffb5-a906-4bcd-9106-16d26ad5e0c0",
+      "name": "Update - reserva2",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "ticketId": "={{ $('Get_ticket').first().json.id }}",
+        "updateFields": {
+          "product": 67000001400,
+          "status": "pending",
+          "type": "=Automatico Cancelamento"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        -576
+      ],
+      "id": "009052e8-fcef-4d1b-a677-4358010e121d",
+      "name": "Update - reserva3",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "N4XYWKHUGx4OH6El",
+          "name": "Freshdesk Gabi"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "BASE_DE_CONHECIMENTO",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BASE_DE_CONHECIMENTO": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Get_ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_ticket": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Update - Assumir manual",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transformer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Secont validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI revision agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "First validation": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Secont validation": {
+      "main": [
+        [
+          {
+            "node": "AI revision agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI revision agent": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "First validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envio de Email": {
+      "main": [
+        [
+          {
+            "node": "Update a ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update - reserva": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformer": {
+      "main": [
+        [
+          {
+            "node": "Envio de Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Transformer1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transformer2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update -DPO",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update - reserva",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many tickets1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many tickets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envio de Email1": {
+      "main": [
+        [
+          {
+            "node": "Update - reserva1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformer1": {
+      "main": [
+        [
+          {
+            "node": "Envio de Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envio de Email2": {
+      "main": [
+        [
+          {
+            "node": "Update - reserva2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformer2": {
+      "main": [
+        [
+          {
+            "node": "Envio de Email2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "574caf74-8e6d-4799-9b88-831c43ba56de",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "y8O4MHd6eLSobLgz",
+  "tags": []
+}

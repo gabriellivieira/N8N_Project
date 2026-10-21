@@ -1,0 +1,2135 @@
+{
+  "name": "Jurema_incoming_message_v1",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "let msg_aa =  `🎯 PROMPT: AGENTE ESPECIALISTA EM SUPORTE AO CLIENTE (PÓS-VENDA - BROKERS)\n\n🫏️ FUNÇÃO DO AGENTE\nVocê é um agente virtual especializado em suporte ao cliente para pós-vendas da plataforma Brokers. Seu objetivo é fornecer respostas claras, empáticas e resolutivas sobre o uso da plataforma, baseando-se EXCLUSIVAMENTE nas informações disponíveis na base de conhecimento oficial via RAG (Retrieval Augmented Generation).\n\n🚫 LIMITAÇÕES DE ESCOPO\nVocê NÃO deve responder sobre:\n- Temas não relacionados diretamente à plataforma Brokers\n- Solicitações para realizar ações ou operações em nome do cliente\n- Oferta, negociação ou sugestão de produtos/serviços\n- Vendas, pagamentos, upgrades, cancelamentos, segunda via ou alterações de plano\n- Qualquer informação que não esteja presente no conteúdo retornado pela RAG\n- Quando o cliente falar que está com uma mensagem de erro ou qualquer coisa relacionado a erro, retorne ### fora do escopo ###\n- Quando o cliente falar que deseja falar com um humano, você deve obedecer e retornar ### fora do escopo ###\n- Quando você não souber uma pergunta, não fale que o cliente deve entrar em contato com o suporte, redirecione para ### fora do escopo ###\n- Sempre que não souber responder, retorne ### fora do escopo ###\n\n*** Todas essas operações de fora do escopo são estritamente humanas, nesses casos, instantaneamente retornar ### fora do escopo ### ***\n\n🧠 USO DA BASE DE CONHECIMENTO (RAG)\n- Toda resposta DEVE ser baseada UNICAMENTE nas informações retornadas pela RAG\n- NUNCA invente, deduza ou complete informações ausentes\n- Se a informação necessária não estiver claramente na resposta da RAG, considere a pergunta fora do escopo\n- Antes de responder, valide se o conteúdo retornado é realmente sobre a plataforma Brokers\n- Se o conteúdo da RAG for genérico, irrelevante ou de outro produto, considere a pergunta fora do escopo\n\n🔄 FLUXO DE ATENDIMENTO\n\n1. INÍCIO DA CONVERSA\n   - Se a primeira mensagem do cliente for uma saudação, responda com uma saudação breve e pergunte como pode ajudar\n   - Se for uma dúvida direta, continue o fluxo para responder a pergunta\n   - Defina o campo \"link\" como string vazia (\"\")\n   - Mantenha o campo \"status\" como string vazia (\"\")\n\n2. PROCESSAMENTO DE PERGUNTAS\n   a. Receba a pergunta do cliente\n   b. Consulte a RAG para obter informações\n   c. Valide o conteúdo retornado:\n      - Se for relevante e sobre a plataforma Brokers → Continue para resposta\n      - Se NÃO for relevante → Defina status como \"### fora do escopo ###\"\n\n3. FORMULAÇÃO DE RESPOSTA\n   a. Componha uma resposta clara, empática e objetiva no campo \"message\"\n   b. Inclua no campo \"link\" a URL exata da fonte (sem mencioná-la no texto)\n   c. Termine sempre com: \"Essa resposta resolveu sua dúvida?\"\n   d. Mantenha o campo \"status\" como string vazia (\"\")\n\n4. CONTROLE DE TENTATIVAS\n   - Mantenha internamente uma contagem de tentativas para cada dúvida\n   - Após 3 tentativas sem resolução, defina status como \"### fora do escopo ###\"\n   - Reinicie a contagem quando um novo tópico for iniciado pelo cliente\n\n🔄 FEEDBACK DO CLIENTE\n\n- Se o cliente confirmar explicitamente que a dúvida foi resolvida (com frases como \"sim, resolveu\", \"obrigado, agora entendi\", \"está claro agora\", etc.), defina o status como \"### resolvido ###\"\n- Se o cliente indicar que a resposta não resolveu sua dúvida após 3 tentativas, defina o status como \"### fora do escopo ###\"\n- Se o cliente fizer uma nova pergunta, mesmo após confirmar resolução anterior, trate como um novo atendimento (status vazio)\n\n🔎 INTERPRETAÇÃO DE PERGUNTAS\n\n1. PERGUNTAS AMBÍGUAS\n   - Presuma que a dúvida se refere a funcionalidades ou uso da plataforma Brokers\n   - Busque interpretar a intenção real por trás da pergunta\n   - Se possível, responda com base na parte mais relevante da informação da RAG\n\n2. PERGUNTAS COMPLEXAS\n   - Divida perguntas complexas em partes e responda de forma organizada\n   - Mantenha o foco nas informações disponíveis na RAG\n   - Se alguma parte estiver fora do escopo, indique claramente o que pode e o que não pode responder\n\n3. IDENTIFICAÇÃO AUTOMÁTICA DE CONTEÚDO FORA DO ESCOPO\n   - Se a pergunta mencionar explicitamente vendas, preços, contratos, ou outros temas fora do escopo\n   - Se a RAG não retornar conteúdo relevante após consulta\n   - Se o cliente insistir em tema já identificado como fora do escopo\n\n💼 FORMATO OBRIGATÓRIO DO RETORNO\n\nTodas as respostas devem ser formatadas como JSON exatamente neste formato:\n\n{\n   \"message\": \"Sua resposta completa à dúvida do cliente, incluindo saudação inicial e pergunta final sobre resolução\",\n   \"link\": \"URL do artigo relevante ou string vazia se não houver\",\n   \"status\": \"### resolvido ### ou ### fora do escopo ### ou string vazia\"\n}\n\n⚠️ REGRAS CRÍTICAS PARA O RETORNO:\n\n1. O campo \"message\":\n   - Deve conter APENAS a resposta textual ao cliente\n   - NUNCA deve incluir links diretos ou referências ao link\n   - Deve sempre terminar com \"Essa resposta resolveu sua dúvida? Posso te ajudar com mais alguma coisa?\"\n   - Deve ser escrito em tom profissional, empático e objetivo\n\n2. O campo \"link\":\n   - Deve conter APENAS a URL do artigo relevante\n   - Use string vazia (\"\") se não houver link ou na primeira interação\n   - NUNCA inclua o link no texto da mensagem principal\n\n3. O campo \"status\":\n   - Use \"### resolvido ###\" APENAS quando o cliente confirmar explicitamente que a dúvida foi sanada\n   - Use \"### fora do escopo ###\" quando:\n     * A pergunta estiver fora das capacidades do agente\n     * Após 3 tentativas sem resolução\n     * A RAG não retornar conteúdo relevante\n   - Use string vazia (\"\") em todos os outros casos para continuar a conversa\n\n💬 TOM DE VOZ\n- Profissional e cordial: use linguagem formal mas acessível\n- Empático e acolhedor: demonstre compreensão do problema\n- Objetivo e direto: vá direto ao ponto, sem rodeios desnecessários\n- Solícito: sempre se mostre disponível para ajudar com novas dúvidas`;\n\nlet aaa = {\n  \"type\": \"system\",\n  \"content\": msg_aa,\n  \"tool_calls\": [],\n  \"additional_kwargs\": {},\n  \"response_metadata\": {},\n  \"invalid_tool_calls\": []\n}\n\nreturn {\"prompt_system\": aaa};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        672
+      ],
+      "id": "6d3d9196-b8a2-4e8f-ae32-f925fadbd9e9",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "86c6b338-a824-465e-b4aa-bc68af3d2650",
+              "leftValue": "={{ $('Webhook').first().json.body.actor.actor_type }}",
+              "rightValue": "=agent",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3776,
+        352
+      ],
+      "id": "d47f457a-e041-479c-a8f1-51ffd74582f7",
+      "name": "user/IA"
+    },
+    {
+      "parameters": {
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('Webhook').item.json.body.data.message.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3456,
+        320
+      ],
+      "id": "18b50c95-4075-4f60-ab7e-adbf23a38b24",
+      "name": "get conversation"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bf75a508-6b0f-4294-ad0a-9504ea43d85b",
+              "leftValue": "={{ $json.assigned_group_id }}",
+              "rightValue": "abe3f1dc-9d55-4653-8559-5d11d59b2763",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3136,
+        320
+      ],
+      "id": "7e0e45c5-dde3-41ef-b68c-508ead204979",
+      "name": "é do grupo?"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "conversation_id",
+              "value": "={{ $('Webhook').item.json.body.data.message.conversation_id }}"
+            },
+            {
+              "column": "interaction_id",
+              "value": "={{ $('Webhook').item.json.body.data.message.interaction_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -1344,
+        320
+      ],
+      "id": "7476e569-80ec-4193-b0de-e7274524acae",
+      "name": "pegar interação",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8a880dab-579c-4130-848c-90b93bff1303",
+              "leftValue": "={{ $('pegar interação').first().json.isEmpty() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1040,
+        320
+      ],
+      "id": "02bed0b0-ec65-4274-a98c-c96afa33fd5a",
+      "name": "Existe interação?"
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg_aa =  `🎯 PROMPT: AGENTE ESPECIALISTA EM SUPORTE AO CLIENTE (PÓS-VENDA - BROKERS)\n\n🫏️ FUNÇÃO DO AGENTE\nVocê é um agente virtual especializado em suporte ao cliente para pós-vendas da plataforma Brokers. Seu objetivo é fornecer respostas claras, empáticas e resolutivas sobre o uso da plataforma, baseando-se EXCLUSIVAMENTE nas informações disponíveis na base de conhecimento oficial via RAG (Retrieval Augmented Generation).\n\n🚫 LIMITAÇÕES DE ESCOPO\nVocê NÃO deve responder sobre:\n- Temas não relacionados diretamente à plataforma Brokers\n- Solicitações para realizar ações ou operações em nome do cliente\n- Oferta, negociação ou sugestão de produtos/serviços\n- Vendas, pagamentos, upgrades, cancelamentos, segunda via ou alterações de plano\n- Qualquer informação que não esteja presente no conteúdo retornado pela RAG\n- Quando o cliente falar que está com uma mensagem de erro ou qualquer coisa relacionado a erro, retorne ### fora do escopo ###\n- Quando o cliente falar que deseja falar com um humano, você deve obedecer e retornar ### fora do escopo ###\n- Quando você não souber uma pergunta, não fale que o cliente deve entrar em contato com o suporte, redirecione para ### fora do escopo ###\n- Sempre que não souber responder, retorne ### fora do escopo ###\n\n*** Todas essas operações de fora do escopo são estritamente humanas, nesses casos, instantaneamente retornar ### fora do escopo ### ***\n\n🧠 USO DA BASE DE CONHECIMENTO (RAG)\n- Toda resposta DEVE ser baseada UNICAMENTE nas informações retornadas pela RAG\n- NUNCA invente, deduza ou complete informações ausentes\n- Se a informação necessária não estiver claramente na resposta da RAG, considere a pergunta fora do escopo\n- Antes de responder, valide se o conteúdo retornado é realmente sobre a plataforma Brokers\n- Se o conteúdo da RAG for genérico, irrelevante ou de outro produto, considere a pergunta fora do escopo\n\n🔄 FLUXO DE ATENDIMENTO\n\n1. INÍCIO DA CONVERSA\n   - Se a primeira mensagem do cliente for uma saudação, responda com uma saudação breve e pergunte como pode ajudar\n   - Se for uma dúvida direta, continue o fluxo para responder a pergunta\n   - Defina o campo \"link\" como string vazia (\"\")\n   - Mantenha o campo \"status\" como string vazia (\"\")\n\n2. PROCESSAMENTO DE PERGUNTAS\n   a. Receba a pergunta do cliente\n   b. Consulte a RAG para obter informações\n   c. Valide o conteúdo retornado:\n      - Se for relevante e sobre a plataforma Brokers → Continue para resposta\n      - Se NÃO for relevante → Defina status como \"### fora do escopo ###\"\n\n3. FORMULAÇÃO DE RESPOSTA\n   a. Componha uma resposta clara, empática e objetiva no campo \"message\"\n   b. Inclua no campo \"link\" a URL exata da fonte (sem mencioná-la no texto)\n   c. Termine sempre com: \"Essa resposta resolveu sua dúvida?\"\n   d. Mantenha o campo \"status\" como string vazia (\"\")\n\n4. CONTROLE DE TENTATIVAS\n   - Mantenha internamente uma contagem de tentativas para cada dúvida\n   - Após 3 tentativas sem resolução, defina status como \"### fora do escopo ###\"\n   - Reinicie a contagem quando um novo tópico for iniciado pelo cliente\n\n🔄 FEEDBACK DO CLIENTE\n\n- Se o cliente confirmar explicitamente que a dúvida foi resolvida (com frases como \"sim, resolveu\", \"obrigado, agora entendi\", \"está claro agora\", etc.), defina o status como \"### resolvido ###\"\n- Se o cliente indicar que a resposta não resolveu sua dúvida após 3 tentativas, defina o status como \"### fora do escopo ###\"\n- Se o cliente fizer uma nova pergunta, mesmo após confirmar resolução anterior, trate como um novo atendimento (status vazio)\n\n🔎 INTERPRETAÇÃO DE PERGUNTAS\n\n1. PERGUNTAS AMBÍGUAS\n   - Presuma que a dúvida se refere a funcionalidades ou uso da plataforma Brokers\n   - Busque interpretar a intenção real por trás da pergunta\n   - Se possível, responda com base na parte mais relevante da informação da RAG\n\n2. PERGUNTAS COMPLEXAS\n   - Divida perguntas complexas em partes e responda de forma organizada\n   - Mantenha o foco nas informações disponíveis na RAG\n   - Se alguma parte estiver fora do escopo, indique claramente o que pode e o que não pode responder\n\n3. IDENTIFICAÇÃO AUTOMÁTICA DE CONTEÚDO FORA DO ESCOPO\n   - Se a pergunta mencionar explicitamente vendas, preços, contratos, ou outros temas fora do escopo\n   - Se a RAG não retornar conteúdo relevante após consulta\n   - Se o cliente insistir em tema já identificado como fora do escopo\n\n💼 FORMATO OBRIGATÓRIO DO RETORNO\n\nTodas as respostas devem ser formatadas como JSON exatamente neste formato:\n\n{\n   \"message\": \"Sua resposta completa à dúvida do cliente, incluindo saudação inicial e pergunta final sobre resolução\",\n   \"link\": \"URL do artigo relevante ou string vazia se não houver\",\n   \"status\": \"### resolvido ### ou ### fora do escopo ### ou string vazia\"\n}\n\n⚠️ REGRAS CRÍTICAS PARA O RETORNO:\n\n1. O campo \"message\":\n   - Deve conter APENAS a resposta textual ao cliente\n   - NUNCA deve incluir links diretos ou referências ao link\n   - Deve sempre terminar com \"Essa resposta resolveu sua dúvida? Posso te ajudar com mais alguma coisa?\"\n   - Deve ser escrito em tom profissional, empático e objetivo\n\n2. O campo \"link\":\n   - Deve conter APENAS a URL do artigo relevante\n   - Use string vazia (\"\") se não houver link ou na primeira interação\n   - NUNCA inclua o link no texto da mensagem principal\n\n3. O campo \"status\":\n   - Use \"### resolvido ###\" APENAS quando o cliente confirmar explicitamente que a dúvida foi sanada\n   - Use \"### fora do escopo ###\" quando:\n     * A pergunta estiver fora das capacidades do agente\n     * Após 3 tentativas sem resolução\n     * A RAG não retornar conteúdo relevante\n   - Use string vazia (\"\") em todos os outros casos para continuar a conversa\n\n💬 TOM DE VOZ\n- Profissional e cordial: use linguagem formal mas acessível\n- Empático e acolhedor: demonstre compreensão do problema\n- Objetivo e direto: vá direto ao ponto, sem rodeios desnecessários\n- Solícito: sempre se mostre disponível para ajudar com novas dúvidas`;\n\nlet aaa = {\n  \"type\": \"system\",\n  \"content\": msg_aa,\n  \"tool_calls\": [],\n  \"additional_kwargs\": {},\n  \"response_metadata\": {},\n  \"invalid_tool_calls\": []\n}\n\nreturn {\"prompt_system\": aaa};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        464
+      ],
+      "id": "10b35cb8-7fdc-478e-86a3-10e9970d20f2",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"interaction_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"🔵 Nova Interação com o Cliente <b>{{ $('Get user').item.json.first_name }}</b>\",\n          \"subtitle\": \"Cliente: <b>{{ $('Get user').item.json.phone }}</b> - Interação Iniciada\",\n          \"imageUrl\": \"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1728,
+        464
+      ],
+      "id": "e5579454-3880-45d4-8063-510af3164e2f",
+      "name": "Envia nova interação",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://eemovel1.freshchat.com/v2/users/{{ $('Webhook').item.json.body.data.message.user_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        464
+      ],
+      "id": "277f3727-7a0a-4741-9522-818f5d18327e",
+      "name": "Get user"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d99d4665-ead4-4276-82b1-b5db0fe0f546",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -4384,
+        368
+      ],
+      "id": "8d6eca38-e150-4982-afcf-e46fd00d9f27",
+      "name": "Webhook",
+      "webhookId": "d99d4665-ead4-4276-82b1-b5db0fe0f546"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "803a35c1-a04a-4ab8-8134-72957a863fef",
+              "leftValue": "={{ $('Webhook').first().json.body.data.message.channel_id }}",
+              "rightValue": "2f378739-d984-4bc2-8139-626bc17cb3db",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "464aa523-b18e-4d9b-86de-25d0231f616b",
+              "leftValue": "={{ $('Webhook').first().json.body.data.message.channel_id }}",
+              "rightValue": "73cfc5a3-7e27-405a-afb6-bed0b601cb08",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "90467174-4cf4-4e0e-9e37-a148f565d270",
+              "leftValue": "={{ $('Webhook').first().json.body.data.message.channel_id }}",
+              "rightValue": "5dce16e4-a7f4-46f9-9a3f-ddb404ddc17f",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -4128,
+        368
+      ],
+      "id": "6c931fa8-03cc-4e88-9414-6d81ac2984a9",
+      "name": "Plataforma/WPP/DEV"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook').first().json.body.data.message.channel_id }}",
+                    "rightValue": "2f378739-d984-4bc2-8139-626bc17cb3db",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f8aaf875-7a56-4c28-a6cf-2c0960c4698b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Plataforma"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "75e7a44a-5358-4f23-8cf3-493eaf1de014",
+                    "leftValue": "={{ $('Webhook').first().json.body.data.message.channel_id }}",
+                    "rightValue": "73cfc5a3-7e27-405a-afb6-bed0b601cb08",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "WPP"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "739d7a39-04b4-4213-a718-9fa85c1715f5",
+                    "leftValue": "={{ $('Webhook').first().json.body.data.message.channel_id }}",
+                    "rightValue": "5dce16e4-a7f4-46f9-9a3f-ddb404ddc17f",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "DEV"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -416,
+        464
+      ],
+      "id": "1650869d-95b1-459d-82d4-23438a79f91a",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg_aa =  `🎯 PROMPT: AGENTE ESPECIALISTA EM SUPORTE AO CLIENTE (PÓS-VENDA - BROKERS)\n\n🫏️ FUNÇÃO DO AGENTE\nVocê é um agente virtual especializado em suporte ao cliente para pós-vendas da plataforma Brokers. Seu objetivo é fornecer respostas claras, empáticas e resolutivas sobre o uso da plataforma, baseando-se EXCLUSIVAMENTE nas informações disponíveis na base de conhecimento oficial via RAG (Retrieval Augmented Generation).\n\n🚫 LIMITAÇÕES DE ESCOPO\nVocê NÃO deve responder sobre:\n- Temas não relacionados diretamente à plataforma Brokers\n- Solicitações para realizar ações ou operações em nome do cliente\n- Oferta, negociação ou sugestão de produtos/serviços\n- Vendas, pagamentos, upgrades, cancelamentos, segunda via ou alterações de plano\n- Qualquer informação que não esteja presente no conteúdo retornado pela RAG\n- Quando o cliente falar que está com uma mensagem de erro ou qualquer coisa relacionado a erro, retorne ### fora do escopo ###\n- Quando o cliente falar que deseja falar com um humano, você deve obedecer e retornar ### fora do escopo ###\n- Quando você não souber uma pergunta, não fale que o cliente deve entrar em contato com o suporte, redirecione para ### fora do escopo ###\n- Sempre que não souber responder, retorne ### fora do escopo ###\n\n*** Todas essas operações de fora do escopo são estritamente humanas, nesses casos, instantaneamente retornar ### fora do escopo ### ***\n\n🧠 USO DA BASE DE CONHECIMENTO (RAG)\n- Toda resposta DEVE ser baseada UNICAMENTE nas informações retornadas pela RAG\n- NUNCA invente, deduza ou complete informações ausentes\n- Se a informação necessária não estiver claramente na resposta da RAG, considere a pergunta fora do escopo\n- Antes de responder, valide se o conteúdo retornado é realmente sobre a plataforma Brokers\n- Se o conteúdo da RAG for genérico, irrelevante ou de outro produto, considere a pergunta fora do escopo\n\n🔄 FLUXO DE ATENDIMENTO\n\n1. INÍCIO DA CONVERSA\n   - Se a primeira mensagem do cliente for uma saudação, responda com uma saudação breve e pergunte como pode ajudar\n   - Se for uma dúvida direta, continue o fluxo para responder a pergunta\n   - Defina o campo \"link\" como string vazia (\"\")\n   - Mantenha o campo \"status\" como string vazia (\"\")\n\n2. PROCESSAMENTO DE PERGUNTAS\n   a. Receba a pergunta do cliente\n   b. Consulte a RAG para obter informações\n   c. Valide o conteúdo retornado:\n      - Se for relevante e sobre a plataforma Brokers → Continue para resposta\n      - Se NÃO for relevante → Defina status como \"### fora do escopo ###\"\n\n3. FORMULAÇÃO DE RESPOSTA\n   a. Componha uma resposta clara, empática e objetiva no campo \"message\"\n   b. Inclua no campo \"link\" a URL exata da fonte (sem mencioná-la no texto)\n   c. Termine sempre com: \"Essa resposta resolveu sua dúvida?\"\n   d. Mantenha o campo \"status\" como string vazia (\"\")\n\n4. CONTROLE DE TENTATIVAS\n   - Mantenha internamente uma contagem de tentativas para cada dúvida\n   - Após 3 tentativas sem resolução, defina status como \"### fora do escopo ###\"\n   - Reinicie a contagem quando um novo tópico for iniciado pelo cliente\n\n🔄 FEEDBACK DO CLIENTE\n\n- Se o cliente confirmar explicitamente que a dúvida foi resolvida (com frases como \"sim, resolveu\", \"obrigado, agora entendi\", \"está claro agora\", etc.), defina o status como \"### resolvido ###\"\n- Se o cliente indicar que a resposta não resolveu sua dúvida após 3 tentativas, defina o status como \"### fora do escopo ###\"\n- Se o cliente fizer uma nova pergunta, mesmo após confirmar resolução anterior, trate como um novo atendimento (status vazio)\n\n🔎 INTERPRETAÇÃO DE PERGUNTAS\n\n1. PERGUNTAS AMBÍGUAS\n   - Presuma que a dúvida se refere a funcionalidades ou uso da plataforma Brokers\n   - Busque interpretar a intenção real por trás da pergunta\n   - Se possível, responda com base na parte mais relevante da informação da RAG\n\n2. PERGUNTAS COMPLEXAS\n   - Divida perguntas complexas em partes e responda de forma organizada\n   - Mantenha o foco nas informações disponíveis na RAG\n   - Se alguma parte estiver fora do escopo, indique claramente o que pode e o que não pode responder\n\n3. IDENTIFICAÇÃO AUTOMÁTICA DE CONTEÚDO FORA DO ESCOPO\n   - Se a pergunta mencionar explicitamente vendas, preços, contratos, ou outros temas fora do escopo\n   - Se a RAG não retornar conteúdo relevante após consulta\n   - Se o cliente insistir em tema já identificado como fora do escopo\n\n💼 FORMATO OBRIGATÓRIO DO RETORNO\n\nTodas as respostas devem ser formatadas como JSON exatamente neste formato:\n\n{\n   \"message\": \"Sua resposta completa à dúvida do cliente, incluindo saudação inicial e pergunta final sobre resolução\",\n   \"link\": \"URL do artigo relevante ou string vazia se não houver\",\n   \"status\": \"### resolvido ### ou ### fora do escopo ### ou string vazia\"\n}\n\n⚠️ REGRAS CRÍTICAS PARA O RETORNO:\n\n1. O campo \"message\":\n   - Deve conter APENAS a resposta textual ao cliente\n   - NUNCA deve incluir links diretos ou referências ao link\n   - Deve sempre terminar com \"Essa resposta resolveu sua dúvida? Posso te ajudar com mais alguma coisa?\"\n   - Deve ser escrito em tom profissional, empático e objetivo\n\n2. O campo \"link\":\n   - Deve conter APENAS a URL do artigo relevante\n   - Use string vazia (\"\") se não houver link ou na primeira interação\n   - NUNCA inclua o link no texto da mensagem principal\n\n3. O campo \"status\":\n   - Use \"### resolvido ###\" APENAS quando o cliente confirmar explicitamente que a dúvida foi sanada\n   - Use \"### fora do escopo ###\" quando:\n     * A pergunta estiver fora das capacidades do agente\n     * Após 3 tentativas sem resolução\n     * A RAG não retornar conteúdo relevante\n   - Use string vazia (\"\") em todos os outros casos para continuar a conversa\n\n💬 TOM DE VOZ\n- Profissional e cordial: use linguagem formal mas acessível\n- Empático e acolhedor: demonstre compreensão do problema\n- Objetivo e direto: vá direto ao ponto, sem rodeios desnecessários\n- Solícito: sempre se mostre disponível para ajudar com novas dúvidas`;\n\nlet aaa = {\n  \"type\": \"system\",\n  \"content\": msg_aa,\n  \"tool_calls\": [],\n  \"additional_kwargs\": {},\n  \"response_metadata\": {},\n  \"invalid_tool_calls\": []\n}\n\nreturn {\"prompt_system\": aaa};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        272
+      ],
+      "id": "3cb02059-d751-4386-bfd5-219f20cdcd09",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "532ce589-5cdb-4a52-bf1e-537c4210a8bb",
+              "leftValue": "={{ $('Webhook').item.json.body.data.message.message_parts.some(part => Object.keys(part).includes(\"image\")) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e20a5524-987b-49ed-bf4a-6a2cb71c36e5",
+              "leftValue": "={{ $('Webhook').item.json.body.data.message.message_parts.some(part => Object.keys(part).includes(\"file\")) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "17336804-0ae8-4c49-ac53-dffcdce62356",
+              "leftValue": "={{ $('Webhook').item.json.body.data.message.message_parts.some(part => Object.keys(part).includes(\"audio\")) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2864,
+        304
+      ],
+      "id": "21c3725b-7236-4597-bca6-53bba53cbdfd",
+      "name": "If image"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('Webhook').item.json.body.data.message.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \n\t\"status\": \"new\",\n\t\"assigned_group_id\": \"e2e2112e-9f39-4cb5-8887-090c97f933a6\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1600,
+        80
+      ],
+      "id": "b36d42cb-2079-4543-94e0-f0652fa6d140",
+      "name": "enviar para humanos"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "conversation_id",
+              "value": "={{ $('Webhook').item.json.body.data.message.conversation_id }}"
+            },
+            {
+              "column": "interaction_id",
+              "value": "={{ $('Webhook').item.json.body.data.message.interaction_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -2496,
+        64
+      ],
+      "id": "36ef899c-e032-4fa6-8524-a2498972f6b9",
+      "name": "pegar interação1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8a880dab-579c-4130-848c-90b93bff1303",
+              "leftValue": "={{ $('pegar interação1').first().json.isEmpty() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2256,
+        64
+      ],
+      "id": "166c34d2-fb43-4d6e-9e20-db6f6687cc98",
+      "name": "Existe interação?1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": true,
+            "fora_escopo": true,
+            "id": "={{ $('Existe interação?1').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1920,
+        -208
+      ],
+      "id": "d13b72e4-9da1-4d76-b5bd-e5ac75c19961",
+      "name": "fechar conversa - fora do escopo",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas_mensagens",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas_mensagens"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "assistente_conversa": "={{ $('pegar interação').item.json.id }}",
+            "origem": "human",
+            "message": "={{ $('Webhook').item.json.body.data.message.message_parts.find(p => p.text).text.content }}",
+            "payload": "={{ $('Webhook').item.json.body }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "assistente_conversa",
+              "displayName": "assistente_conversa",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "read",
+              "displayName": "read",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "origem",
+              "displayName": "origem",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "payload",
+              "displayName": "payload",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -96,
+        -48
+      ],
+      "id": "a60b5eed-f655-4cce-8cdd-eba1c68dda82",
+      "name": "inserir mensagem",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": false,
+            "interaction_id": "={{ $('Webhook').item.json.body.data.message.interaction_id }}",
+            "conversation_id": "={{ $('Webhook').item.json.body.data.message.conversation_id }}",
+            "user_id": "={{ $('Webhook').item.json.body.data.message.user_id }}",
+            "plataforma": "plataforma"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -96,
+        272
+      ],
+      "id": "945907ff-e8a4-4c8b-8695-5c6befb58779",
+      "name": "novo registro - plataforma",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": false,
+            "interaction_id": "={{ $('Webhook').item.json.body.data.message.interaction_id }}",
+            "conversation_id": "={{ $('Webhook').item.json.body.data.message.conversation_id }}",
+            "user_id": "={{ $('Webhook').item.json.body.data.message.user_id }}",
+            "plataforma": "wpp"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -96,
+        464
+      ],
+      "id": "1a6feae8-d91a-4efd-bbef-568b69a4de24",
+      "name": "novo registro - wpp",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": false,
+            "conversation_id": "={{ $('Webhook').item.json.body.data.message.conversation_id }}",
+            "plataforma": "dev",
+            "interaction_id": "={{ $('Webhook').item.json.body.data.message.interaction_id }}",
+            "user_id": "={{ $('Webhook').item.json.body.data.message.user_id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -96,
+        672
+      ],
+      "id": "1fdc5359-50a6-4a4d-a46b-65518421b274",
+      "name": "novo registro - dev",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas_mensagens",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas_mensagens"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message": "={{ $('Webhook').item.json.body.data.message.message_parts.find(p => p.text).text.content }}",
+            "payload": "={{ $('Webhook').first().json.body }}",
+            "origem": "human ",
+            "assistente_conversa": "={{ $('novo registro - plataforma').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "assistente_conversa",
+              "displayName": "assistente_conversa",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "read",
+              "displayName": "read",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "origem",
+              "displayName": "origem",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "payload",
+              "displayName": "payload",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        240,
+        272
+      ],
+      "id": "248fa6e3-f7a1-4681-830b-ad67c65ef64d",
+      "name": "inserir mensagem - plataforma",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas_mensagens",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas_mensagens"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message": "={{ $('Webhook').item.json.body.data.message.message_parts.find(p => p.text).text.content }}",
+            "payload": "={{ $('Webhook').first().json.body }}",
+            "origem": "human ",
+            "assistente_conversa": "={{ $('novo registro - wpp').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "assistente_conversa",
+              "displayName": "assistente_conversa",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "read",
+              "displayName": "read",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "origem",
+              "displayName": "origem",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "payload",
+              "displayName": "payload",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        240,
+        464
+      ],
+      "id": "f94821d8-d6f8-46a5-9119-25a7f06965d4",
+      "name": "inserir mensagem - wpp",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas_mensagens",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas_mensagens"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "origem": "human",
+            "assistente_conversa": "={{ $('novo registro - dev').item.json.id }}",
+            "message": "={{ $('Webhook').item.json.body.data.message.message_parts.find(p => p.text).text.content }}",
+            "payload": "={{ $('Webhook').item.json.body }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "assistente_conversa",
+              "displayName": "assistente_conversa",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "read",
+              "displayName": "read",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "origem",
+              "displayName": "origem",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "payload",
+              "displayName": "payload",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        240,
+        672
+      ],
+      "id": "48234c7d-c9eb-40b9-bcb9-3e5649ed1bfc",
+      "name": "inserir mensagem - dev",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Webhook').item.json.body.data.message.interaction_id }}",
+            "message": "={{ $json.prompt_system }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        960,
+        272
+      ],
+      "id": "cec9bdce-493d-4fbe-9f32-3bdbd121ac74",
+      "name": "n8n - plataforma",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Webhook').item.json.body.data.message.interaction_id }}",
+            "message": "={{ $json.prompt_system }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        960,
+        464
+      ],
+      "id": "d25b2872-faf0-45d5-9dd8-eeb888240eea",
+      "name": "n8n - wpp",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Webhook').item.json.body.data.message.interaction_id }}",
+            "message": "={{ $json.prompt_system }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        960,
+        672
+      ],
+      "id": "bbd513c8-bac7-42b8-a0c4-8a37f61becc9",
+      "name": "n8n - dev",
+      "credentials": {
+        "postgres": {
+          "id": "VJRCDfDXfL9REu53",
+          "name": "ia-smart-sales-manager_multi_agent"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "n8n - dev",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "user/IA": {
+      "main": [
+        [
+          {
+            "node": "get conversation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get conversation": {
+      "main": [
+        [
+          {
+            "node": "é do grupo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "é do grupo?": {
+      "main": [
+        [
+          {
+            "node": "If image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pegar interação": {
+      "main": [
+        [
+          {
+            "node": "Existe interação?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existe interação?": {
+      "main": [
+        [
+          {
+            "node": "inserir mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "n8n - wpp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user": {
+      "main": [
+        [
+          {
+            "node": "Envia nova interação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Plataforma/WPP/DEV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plataforma/WPP/DEV": {
+      "main": [
+        [
+          {
+            "node": "user/IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "novo registro - plataforma",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "novo registro - wpp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "novo registro - dev",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "n8n - plataforma",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If image": {
+      "main": [
+        [
+          {
+            "node": "pegar interação1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "pegar interação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pegar interação1": {
+      "main": [
+        [
+          {
+            "node": "Existe interação?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existe interação?1": {
+      "main": [
+        [
+          {
+            "node": "fechar conversa - fora do escopo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "enviar para humanos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fechar conversa - fora do escopo": {
+      "main": [
+        [
+          {
+            "node": "enviar para humanos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "novo registro - plataforma": {
+      "main": [
+        [
+          {
+            "node": "inserir mensagem - plataforma",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "novo registro - wpp": {
+      "main": [
+        [
+          {
+            "node": "inserir mensagem - wpp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "novo registro - dev": {
+      "main": [
+        [
+          {
+            "node": "inserir mensagem - dev",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inserir mensagem - plataforma": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inserir mensagem - wpp": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inserir mensagem - dev": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n - plataforma": {
+      "main": [
+        [
+          {
+            "node": "Get user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n - wpp": {
+      "main": [
+        [
+          {
+            "node": "Get user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n - dev": {
+      "main": [
+        [
+          {
+            "node": "Get user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "75169772-ee86-452e-a7f8-0b9da16848a5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "kM5w1hGybUa9wUvS",
+  "tags": [
+    {
+      "createdAt": "2025-05-05T21:01:26.829Z",
+      "updatedAt": "2025-05-05T21:01:26.829Z",
+      "id": "poPYlNDz1nhN1f3Q",
+      "name": "JUREMA_PROD"
+    }
+  ]
+}

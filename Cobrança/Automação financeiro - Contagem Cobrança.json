@@ -1,0 +1,111 @@
+{
+  "name": "Automação financeiro - Contagem Cobrança",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 18
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -96,
+        -144
+      ],
+      "id": "99ee80ce-241b-4da0-9a4c-d08ae3f06a1d",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n\tcount(id)\nFROM brokers_cs.cobranca_cadencia\nWHERE status = TRUE AND data_max_envio::date = current_date;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        160,
+        -144
+      ],
+      "id": "ca3ca43f-29a3-4fc0-a51f-fd12122eed6a",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"✅ Mensagens Agendadas com Sucesso\",\n        \"subtitle\": \"Resumo da Operação\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Total de Pessoas que foram enviadas mensagem\",\n                \"content\": \"{{ $('Postgres').last().json.count }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        -144
+      ],
+      "id": "2a567ae0-e245-4be9-8062-8ad77156ae9f",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "35c12e17-252d-462a-8a9e-6d419e0feae4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "IzOEV5xwVpw2jOyW",
+  "tags": [
+    {
+      "createdAt": "2025-04-29T18:08:11.645Z",
+      "updatedAt": "2025-04-29T18:08:11.645Z",
+      "id": "nd6RHGJa9oL2XRr9",
+      "name": "Financeiro"
+    }
+  ]
+}

@@ -1,0 +1,470 @@
+{
+  "name": "Notificação (#brokers-comercial-financeiro)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "29a15f34-6fee-4fb3-8f40-700a546014dc",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -64
+      ],
+      "id": "b3d8056e-5720-490c-9b49-14e683f55387",
+      "name": "Solicitações de links externos",
+      "webhookId": "29a15f34-6fee-4fb3-8f40-700a546014dc"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "9f83b2fd-21c2-44d5-8e36-21cfe5df2c7a",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        512
+      ],
+      "id": "0e360e17-0f1b-4fa4-b091-12bfd28cb8a7",
+      "name": "Solicitações de consulta CNPJ",
+      "webhookId": "9f83b2fd-21c2-44d5-8e36-21cfe5df2c7a"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6ef46c18-9e78-4765-b08d-081c94a3681b",
+              "leftValue": "={{ $('Code').item.json.body.data.properties['Status'].status['name'] }}",
+              "rightValue": "Aprovado",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        512
+      ],
+      "id": "0fd23fe4-ef68-4061-be90-518980ccb43d",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "content": "## Solicitações de consulta CNPJ\n\n1- Quando solicitação de consulta de cnpj é criada na página https://www.notion.so/18b2cc3c9b7280669b19e42342038da4?v=18b2cc3c9b72801197ed000ce47aae91&pvs=4 , é disparado um webhook para o n8n\n\n2- Quando Status da solicitação é alterado para Aprovado ou Reprovado, é disparado um webhook para o n8n\n\n3- If analise se, Status contém \"Não Iniciada\" (solicitações novas), dispara mensagem para #brokers-comercial-financeiro e #financeiro\n\n4- Se if é false, status contem \"Reprovado\" dispara mensagem para #brokers-comercial-financeiro informando que a solicitação foi reprovada\n\n5- Próximo if analisa se status contem \"Aprovado\" e se sim, dispara mensagem para #brokers-comercial-financeiro informando que a solicitação foi aprovada",
+        "height": 580,
+        "width": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        352
+      ],
+      "id": "7eff4b09-3a89-4e4a-ad00-52bc899c02af",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAAWoBEYHQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=m1K1iiK7AhtgmiZgQcmUbwUYKziDHk7PkzvqOhidqj0",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"payment_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"Nova Solicitação de Pagamento por Link Externo\",\n          \"subtitle\": \"Detalhes da Solicitação\",\n          \"imageUrl\": \"https://img.icons8.com/?size=100&id=lEMPkL3DwtiB&format=png&color=000000\",\n          \"imageType\": \"CIRCLE\"\n        },\n        \"sections\": [\n          {\n            \"widgets\": [\n              {\n                \"textParagraph\": {\n                  \"text\": \"Nome do Cliente:\\n{{ $json.body.data.properties['Nome do Cliente'].title[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Plano Contratado:\\n{{ $json.body.data.properties['Plano Contratado'].rich_text[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Valor:\\n{{ $json.body.data.properties['Valor do link de pagamento'].number }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Consultor:\\n{{ $json.body.data.properties.Consultor.people[0].name }}\"\n                }\n              },\n              {\n                \"divider\": {}\n              },\n              {\n                \"buttonList\": {\n                  \"buttons\": [\n                    {\n                      \"text\": \"Solicitação\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $json.body.data.url }}\"\n                        }\n                      }\n                    },\n                    {\n                      \"text\": \"Iugu\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $json.body.data.properties['ID IUGU'].url }}\"\n                        }\n                      }\n                    },\n                    {\n                      \"text\": \"PipeDrive\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $json.body.data.properties['LINK CRM'].url }}\"\n                        }\n                      }\n                    }\n                  ]\n                }\n              }\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        -128
+      ],
+      "id": "eca358ee-496b-49ec-9211-6da775bed4e6",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAAWoBEYHQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=m1K1iiK7AhtgmiZgQcmUbwUYKziDHk7PkzvqOhidqj0",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"payment_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"Nova Solicitação de Pagamento por Link Externo\",\n          \"subtitle\": \"Detalhes da Solicitação\",\n          \"imageUrl\": \"https://img.icons8.com/?size=100&id=lEMPkL3DwtiB&format=png&color=000000\",\n          \"imageType\": \"CIRCLE\"\n        },\n        \"sections\": [\n          {\n            \"widgets\": [\n              {\n                \"textParagraph\": {\n                  \"text\": \"Nome do Cliente:\\n{{ $json.body.data.properties['Nome do Cliente'].title[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Plano Contratado:\\n{{ $json.body.data.properties['Plano Contratado'].rich_text[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Valor:\\n{{ $json.body.data.properties['Valor do link de pagamento'].number }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Consultor:\\n{{ $json.body.data.properties.Consultor.people[0].name }}\"\n                }\n              },\n              {\n                \"divider\": {}\n              },\n              {\n                \"buttonList\": {\n                  \"buttons\": [\n                    {\n                      \"text\": \"Solicitação\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $json.body.data.url }}\"\n                        }\n                      }\n                    },\n                    {\n                      \"text\": \"Iugu\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $json.body.data.properties['ID IUGU'].url }}\"\n                        }\n                      }\n                    },\n                    {\n                      \"text\": \"PipeDrive\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $json.body.data.properties['LINK CRM'].url }}\"\n                        }\n                      }\n                    }\n                  ]\n                }\n              }\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        48
+      ],
+      "id": "65a240ad-a8c5-4e13-9b32-847a1d834de8",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const dataSaida = item.json.body?.data;\n  if (!dataSaida || !dataSaida.created_time) {\n    return item;\n  }\n\n  const d = new Date(dataSaida.created_time);\n\n  // Subtrai 3 horas do horário atual\n  d.setHours(d.getHours() - 3);\n\n  // Agora formatamos manualmente\n  const dia = String(d.getDate()).padStart(2, '0');\n  const mes = String(d.getMonth() + 1).padStart(2, '0');\n  const ano = d.getFullYear();\n  const hora = String(d.getHours()).padStart(2, '0');\n  const minuto = String(d.getMinutes()).padStart(2, '0');\n\n  const formatted = `${dia}/${mes}/${ano} ${hora}:${minuto}`;\n\n  dataSaida.formattedDate = formatted;\n\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        512
+      ],
+      "id": "aca029e9-d6f4-4920-b301-ae217eff415e",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAAWoBEYHQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=m1K1iiK7AhtgmiZgQcmUbwUYKziDHk7PkzvqOhidqj0",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"approval_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"Solicitação de Consulta de CNPJ Aprovada \",\n          \"subtitle\": \"Detalhes da Solicitação\",\n          \"imageUrl\": \"https://img.icons8.com/?size=100&id=108633&format=png&color=000000\",\n          \"imageType\": \"CIRCLE\"\n        },\n        \"sections\": [\n          {\n            \"widgets\": [\n              {\n                \"textParagraph\": {\n                  \"text\": \"Razão Social:\\n{{ $('Solicitações de consulta CNPJ').first().json.body.data.properties['RAZÃO SOCIAL/NOME'].title[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"CNPJ Solicitado:\\n{{ $('Solicitações de consulta CNPJ').first().json.body.data.properties['CNPJ/CPF'].rich_text[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Nome do Solicitante:\\n{{ $('Code').first().json.body.data.properties['SOLICITADO POR'].rich_text[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Data da Solicitação:\\n{{ $json.body.data.formattedDate }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Status da Solicitação:\\n{{ $('Code').first().json.body.data.properties['Status'].status.name }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Resultado da Análise:\\n{{ $('Code').first().json.body.data.properties['Resultado da análise'].status.name }}\"\n                }\n              },\n              {\n                \"divider\": {}\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"🔹 Justificativa: {{ $('Code').first().json.body.data.properties.Justificativa.rich_text[0].text.content }}\"\n                }\n              },\n              {\n                \"buttonList\": {\n                  \"buttons\": [\n                    {\n                      \"text\": \"Solicitação\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $('Code').first().json.body.data.url }}\"\n                        }\n                      }\n                    },\n                    {\n                      \"text\": \"PipeDrive\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $('Code').first().json.body.data.properties['LINK DO CRM'].url }}\"\n                        }\n                      }\n                    }\n                  ]\n                }\n              }\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        448
+      ],
+      "id": "e9beebfe-0ad5-47b8-9a5e-84eea4048ca9",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAAWoBEYHQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=m1K1iiK7AhtgmiZgQcmUbwUYKziDHk7PkzvqOhidqj0",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"rejection_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"Solicitação de Consulta de CNPJ Reprovada\",\n          \"subtitle\": \"Detalhes da Solicitação\",\n          \"imageUrl\": \"https://img.icons8.com/?size=100&id=64164&format=png&color=000000\",\n          \"imageType\": \"CIRCLE\"\n        },\n        \"sections\": [\n          {\n            \"widgets\": [\n              {\n                \"textParagraph\": {\n                  \"text\": \"Razão Social:\\n{{ $('Solicitações de consulta CNPJ').first().json.body.data.properties['RAZÃO SOCIAL/NOME'].title[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"CNPJ Solicitado:\\n{{ $('Solicitações de consulta CNPJ').first().json.body.data.properties['CNPJ/CPF'].rich_text[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Nome do Solicitante:\\n{{ $('Code').first().json.body.data.properties['SOLICITADO POR'].rich_text[0].text.content }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Data da Solicitação:\\n{{ $json.body.data.formattedDate }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Status da Solicitação:\\n{{ $('Code').first().json.body.data.properties['Status'].status.name }}\"\n                }\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"Motivo da Reprovação:\\n{{ $('Code').first().json.body.data.properties['Resultado da análise'].status.name }}\"\n                }\n              },\n              {\n                \"divider\": {}\n              },\n              {\n                \"textParagraph\": {\n                  \"text\": \"🔸 Justificativa: {{ $('Code').first().json.body.data.properties.Justificativa.rich_text[0].text.content }}\"\n                }\n              },\n              {\n                \"buttonList\": {\n                  \"buttons\": [\n                    {\n                      \"text\": \"Solicitação\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $('Code').first().json.body.data.url }}\"\n                        }\n                      }\n                    },\n                    {\n                      \"text\": \"PipeDrive\",\n                      \"onClick\": {\n                        \"openLink\": {\n                          \"url\": \"{{ $('Code').first().json.body.data.properties['LINK DO CRM'].url }}\"\n                        }\n                      }\n                    }\n                  ]\n                }\n              }\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        608
+      ],
+      "id": "cbdb61ee-7bfe-489d-b277-916eb2ebd45a",
+      "name": "HTTP Request5"
+    }
+  ],
+  "pinData": {
+    "Solicitações de consulta CNPJ": [
+      {
+        "json": {
+          "headers": {
+            "host": "automation.eemovel.ai",
+            "x-real-ip": "131.149.232.44",
+            "x-forwarded-for": "131.149.232.44",
+            "x-forwarded-proto": "https",
+            "x-forwarded-host": "automation.eemovel.ai",
+            "x-forwarded-port": "443",
+            "connection": "upgrade",
+            "content-length": "2984",
+            "user-agent": "NotionAutomation",
+            "content-type": "application/json",
+            "traceparent": "00-add07abc372bd6b420d0cf74d204e38b-1cdaeddd0452b948-00"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "source": {
+              "type": "automation",
+              "automation_id": "1922cc3c-9b72-809e-9998-004d2ebe3373",
+              "action_id": "1922cc3c-9b72-807b-93d0-005a7de7e7c7",
+              "event_id": "3d0d3411-b87f-4738-a8ce-129ee47ea05f",
+              "attempt": 1
+            },
+            "data": {
+              "object": "page",
+              "id": "31b2cc3c-9b72-8187-b9aa-f51dc026d647",
+              "created_time": "2026-03-06T18:18:00.000Z",
+              "last_edited_time": "2026-03-06T18:18:00.000Z",
+              "created_by": {
+                "object": "user",
+                "id": "00000000-0000-0000-0000-00000000000a"
+              },
+              "last_edited_by": {
+                "object": "user",
+                "id": "3192cc3c-9b72-8166-9436-00276472a500"
+              },
+              "cover": null,
+              "icon": null,
+              "parent": {
+                "type": "database_id",
+                "database_id": "18b2cc3c-9b72-8066-9b19-e42342038da4"
+              },
+              "archived": false,
+              "in_trash": false,
+              "is_locked": false,
+              "properties": {
+                "Status": {
+                  "id": "%3DZDw",
+                  "type": "status",
+                  "status": {
+                    "id": "Au;n",
+                    "name": "Reprovado",
+                    "color": "red"
+                  }
+                },
+                "CNPJ/CPF": {
+                  "id": "%40b%7DI",
+                  "type": "rich_text",
+                  "rich_text": [
+                    {
+                      "type": "text",
+                      "text": {
+                        "content": "11184186979",
+                        "link": null
+                      },
+                      "annotations": {
+                        "bold": false,
+                        "italic": false,
+                        "strikethrough": false,
+                        "underline": false,
+                        "code": false,
+                        "color": "default"
+                      },
+                      "plain_text": "11184186979",
+                      "href": null
+                    }
+                  ]
+                },
+                "Criado em": {
+                  "id": "HMGY",
+                  "type": "created_time",
+                  "created_time": "2026-03-06T18:18:00.000Z"
+                },
+                "Resultado da análise": {
+                  "id": "%5D_I%3B",
+                  "type": "status",
+                  "status": {
+                    "id": "26566fc3-4612-41bd-bd0f-fb916ff6c03b",
+                    "name": "Sem restrição",
+                    "color": "green"
+                  }
+                },
+                "Criado por": {
+                  "id": "oPGF",
+                  "type": "created_by",
+                  "created_by": {
+                    "object": "user",
+                    "id": "00000000-0000-0000-0000-00000000000a",
+                    "name": "Anonymous",
+                    "avatar_url": "https://s3.us-west-2.amazonaws.com/public.notion-static.com/5478707d-f8ea-46d8-902a-d6d932ac20da.png",
+                    "type": "person",
+                    "person": {
+                      "email": "ops+form@makenotion.com"
+                    }
+                  }
+                },
+                "RAZÃO SOCIAL/NOME": {
+                  "id": "title",
+                  "type": "title",
+                  "title": [
+                    {
+                      "type": "text",
+                      "text": {
+                        "content": "Luis Duma",
+                        "link": null
+                      },
+                      "annotations": {
+                        "bold": false,
+                        "italic": false,
+                        "strikethrough": false,
+                        "underline": false,
+                        "code": false,
+                        "color": "default"
+                      },
+                      "plain_text": "Luis Duma",
+                      "href": null
+                    }
+                  ]
+                },
+                "LINK DO CRM": {
+                  "id": "%5EwBb",
+                  "type": "url",
+                  "url": "www.w.com.br"
+                },
+                "SOLICITADO POR": {
+                  "id": "Q%7Cot",
+                  "type": "rich_text",
+                  "rich_text": [
+                    {
+                      "type": "text",
+                      "text": {
+                        "content": "Duma",
+                        "link": null
+                      },
+                      "annotations": {
+                        "bold": false,
+                        "italic": false,
+                        "strikethrough": false,
+                        "underline": false,
+                        "code": false,
+                        "color": "default"
+                      },
+                      "plain_text": "Duma",
+                      "href": null
+                    }
+                  ]
+                },
+                "Justificativa": {
+                  "id": "tQLj",
+                  "type": "rich_text",
+                  "rich_text": [
+                    {
+                      "type": "text",
+                      "text": {
+                        "content": "Para aprovar, reduzir parcelamento para até 5x.",
+                        "link": null
+                      },
+                      "annotations": {
+                        "bold": false,
+                        "italic": false,
+                        "strikethrough": false,
+                        "underline": false,
+                        "code": false,
+                        "color": "default"
+                      },
+                      "plain_text": "Para aprovar, reduzir parcelamento para até 5x.",
+                      "href": null
+                    }
+                  ]
+                },
+                "Parcelas": {
+                  "id": "bdH%7C",
+                  "type": "select",
+                  "select": {
+                    "id": "hGWu",
+                    "name": "12",
+                    "color": "orange"
+                  }
+                },
+                "Produto": {
+                  "id": "HeT%5B",
+                  "type": "multi_select",
+                  "multi_select": [
+                    {
+                      "id": "sm~V",
+                      "name": "Atenda+",
+                      "color": "orange"
+                    }
+                  ]
+                },
+                "Valor": {
+                  "id": "xd%3DI",
+                  "type": "number",
+                  "number": 2000
+                }
+              },
+              "url": "https://www.notion.so/Luis-Duma-31b2cc3c9b728187b9aaf51dc026d647",
+              "public_url": null,
+              "request_id": "f3d5658d-1187-4ffc-956a-0f1cb9fd147f"
+            }
+          },
+          "webhookUrl": "https://automation.eemovel.ai/webhook/9f83b2fd-21c2-44d5-8e36-21cfe5df2c7a",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Solicitações de links externos": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solicitações de consulta CNPJ": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "5a958220-309a-4fcb-94e4-52054bc4b338",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "7db5wwVFadJZBv63",
+  "tags": []
+}

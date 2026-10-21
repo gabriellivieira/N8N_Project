@@ -1,0 +1,4141 @@
+{
+  "name": "Automação Financeiro - Registros de cobrança",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -4880,
+        1712
+      ],
+      "id": "4f9c3953-6415-4cee-b121-81a0eaa97363",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": -2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "9bedce1f-935f-4663-ad40-77c461b9e7cd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "vence a dois 2"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "681b97ac-db68-4481-9d83-758312e017bc",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "vence hoje"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "569f95be-4391-44fb-abcb-4600d49741f8",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "-2"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f76f07cc-9529-4a51-b4c5-8e4b72f3ce1c",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "-5"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c2b3483f-880d-4192-85aa-4832ec09d361",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 7,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "-7"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5670691d-5946-41ca-ae78-7acc84658c12",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 10,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "-10"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "99c7a870-8ac0-4c37-a3b6-f6c97c1f4590",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 15,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "-15"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dfcb7af2-4d6b-43a9-9e09-3a9d90cc7410",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 20,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "-20"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9a4aab96-292f-4340-b4ce-60eb8550bd80",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 25,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "-25"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "aa5ffad6-d027-44b9-982b-94abeec809b7",
+                    "leftValue": "={{ $('loop').last().json.vencido }}",
+                    "rightValue": 30,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "-30"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2704,
+        1680
+      ],
+      "id": "e22ffef9-d021-42c4-87b3-d77fcd2d5cc2",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\nEstamos entrando em contato para informar que sua assinatura está se aproximando do vencimento.\nPara facilitar sua programação, segue o link da fatura:\n🔗 {{ $('loop').last().json.link }}\nCaso deseje negociar valores ou realizar alguma alteração no seu plano, estamos à disposição para ajudar.\nQualquer dúvida, é só nos chamar! 🤝",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "+2"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mandar_suporte",
+              "displayName": "mandar_suporte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        2544
+      ],
+      "id": "7d939a26-ace2-422b-80a1-4911438b55e4",
+      "name": "2 adiantado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\\n\\nLembramos que hoje é o vencimento da sua fatura.\\n\\nSe o pagamento já foi realizado, por favor, desconsidere esta mensagem.\\n\\nCaso tenha interesse em negociar valores ou alterar seu plano, entre em contato conosco.\\n\\nEstamos por aqui para o que precisar! 😊",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "0"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        2768
+      ],
+      "id": "f08d5795-4333-41bc-8066-d8172e1f3f94",
+      "name": "no dia",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\nSua fatura venceu há 2 dias e ainda não identificamos o pagamento. Para evitar a suspensão dos serviços, sugerimos que regularize quanto antes.\n🔗 {{ $('loop').last().json.link }}\nSe já efetuou o pagamento, por favor, nos informe para atualização do sistema.",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "-2"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        2992
+      ],
+      "id": "c2447d90-5768-4402-bec5-14962385c047",
+      "name": "2 atrasado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\nSua fatura segue em aberto há 7 dias. Para evitar a interrupção do serviço, pedimos que regularize o pagamento quanto antes.\n🔗 {{ $('loop').last().json.link }}\nSe tiver dúvidas ou já realizou o pagamento, fale com a gente!",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "-7"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        3424
+      ],
+      "id": "82844173-4e8b-40d4-839a-ca1c82a18dae",
+      "name": "7 atrasado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\nSua fatura venceu há 10 dias e ainda não identificamos o pagamento. Por esse motivo, os serviços foram temporariamente suspensos.\n⚠️ Para evitar maiores impactos e reativar o acesso, é essencial que a pendência seja regularizada o quanto antes.\n🔗 {{ $('loop').last().json.link }}\nSe já efetuou o pagamento, nos informe para que possamos agilizar a liberação.",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "-10"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        3648
+      ],
+      "id": "f9dcde6b-7b25-44fe-9c96-e5e55e7547ab",
+      "name": "10 atrasado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\nSua fatura segue em aberto há 15 dias e os serviços continuam suspensos.\n⚠️ Caso a regularização não ocorra nos próximos dias, seu plano poderá ser encerrado definitivamente.\n🔗 {{ $('loop').last().json.link }}\nSe precisar de ajuda ou já tiver efetuado o pagamento, nos avise o quanto antes.",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "-15"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mandar_suporte",
+              "displayName": "mandar_suporte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        3872
+      ],
+      "id": "80fc7ec1-4bb3-4b8e-9064-c55f89a4e2fb",
+      "name": "15 atrasado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\\n\\nSua fatura está vencida há 20 dias e, até o momento, a pendência segue sem resolução.\\n\\n⚠️ Se o pagamento não for regularizado com urgência, seu acesso e os benefícios contratados poderão ser permanentemente perdidos.\\n\\nEstamos aqui para ajudar no que for necessário. Basta nos chamar.",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "-20"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        4080
+      ],
+      "id": "80bfd376-211b-4d32-887c-8ecdad5eadd9",
+      "name": "20 atrasado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\\n\\nJá se passaram 25 dias desde o vencimento da sua fatura.\\n\\n⚠️ O serviço segue suspenso e, caso o pagamento não seja regularizado imediatamente, o plano será encerrado de forma definitiva.\\n\\nSe já tiver pago ou precisar de suporte, fale conosco agora mesmo.",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "-25"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        4304
+      ],
+      "id": "cb73a746-a214-4893-8837-f258076e44bb",
+      "name": "25 atrasado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\\n\\nSua fatura venceu há 30 dias e não localizamos o pagamento em nosso sistema.\\n\\n⚠️ Informamos que, se a regularização não ocorrer ainda hoje, seu plano será cancelado permanentemente, incluindo a perda dos benefícios contratados.\\n\\nCaso já tenha efetuado o pagamento, nos avise com urgência. Estamos disponíveis para ajudar!",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "tempo_cobranca": "-30"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        4528
+      ],
+      "id": "cff24083-66bf-4c99-b681-1099b5e24d3c",
+      "name": "30 atrasado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"✅ Mensagens Agendadas com Sucesso\",\n        \"subtitle\": \"Resumo da Operação\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Total de Pessoas\",\n                \"content\": \"{{ $('count').item.json.count }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3024,
+        1120
+      ],
+      "id": "291239d8-8a1f-44a1-984c-c13e48911dca",
+      "name": "HTTP Request",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        2560
+      ],
+      "id": "139917c4-77f9-4e62-acaf-3d269b22ea25",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        2784
+      ],
+      "id": "8b177145-6f27-4b70-ada7-66ff81cb2b77",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        3232
+      ],
+      "id": "58829133-6d5f-46bc-a5cc-6c72adf688fb",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        3008
+      ],
+      "id": "d38307ac-0bb1-4b60-aa31-af87bab0ec24",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        3664
+      ],
+      "id": "9dcf8003-8ba0-4919-935d-42986713fc8d",
+      "name": "HTTP Request5"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        3440
+      ],
+      "id": "a654d67a-7915-43c6-922e-f8036717497a",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        3888
+      ],
+      "id": "4adefe3b-974e-43b9-b874-2ef5ff5ca82a",
+      "name": "HTTP Request7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        4112
+      ],
+      "id": "577abf7f-257d-4266-b44a-b554f2109b5b",
+      "name": "HTTP Request8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        4320
+      ],
+      "id": "6e8f35b7-2985-4732-be1c-0c95327718ce",
+      "name": "HTTP Request9"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3744,
+        4544
+      ],
+      "id": "24a2001d-9639-4a61-b8c8-8a5b06dfb979",
+      "name": "HTTP Request10"
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "get",
+        "personId": "={{ $('deal').last().json.item.person.id }}",
+        "resolveProperties": true
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        48,
+        1840
+      ],
+      "id": "74f2be1f-bf53-4f3e-9417-4760a440ed6e",
+      "name": "person",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "organization",
+        "operation": "get",
+        "organizationId": "={{ $('deal').last().json.item.organization.id }}",
+        "resolveProperties": true
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        64,
+        2352
+      ],
+      "id": "e9cf8fa9-320c-45cb-9315-34d3f59d4c90",
+      "name": "organization",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "term": "={{ $('loop').last().json.id_user }}",
+        "exactMatch": true,
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -1376,
+        2080
+      ],
+      "id": "8f8f5f97-8be9-4e0c-833c-822ae9f87c87",
+      "name": "deal",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "search",
+        "term": "={{ $('loop').item.json.email }}",
+        "additionalFields": {
+          "exactMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -2160,
+        1728
+      ],
+      "id": "a525e333-6224-495d-94b0-e58026db147a",
+      "name": "1tentativa",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4b8489e2-37f4-4338-aaeb-f7e695aca196",
+              "leftValue": "={{ $('organization').last().json.Telefone }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1072,
+        2320
+      ],
+      "id": "2283e521-d707-4faf-8031-72330030aa0d",
+      "name": "telefone"
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "get",
+        "personId": "={{ $('organization').last().json.last_activity.person_id }}"
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        2544
+      ],
+      "id": "0dc1420c-530b-494a-ba01-cd73808acbe3",
+      "name": "person_last",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -4016,
+        1712
+      ],
+      "id": "d75adf1f-9503-43cc-a4fa-0b167eec2b33",
+      "name": "loop"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH faturas_base AS (\n    SELECT\n        ibi.customer_name AS nome,\n        ibi.customer_id AS id_user,\n        pbus.user_id as brokers_id,\n        ibi.payer_email AS email,\n        concat(ibi.payer_phone_prefix, ibi.payer_phone) as numero,\n        (ibi.due_date AT TIME ZONE 'America/Sao_Paulo')::date AS validade,\n        ibi.secure_url AS link\n    FROM\n        analytics_v2.iugu_brokers_invoices ibi\n    LEFT JOIN\n        analytics_v2.iugu_brokers_subscriptions ibs \n        ON ibi.customer_id = ibs.customer_id\n    left join \n        analytics_v2.platform_brokers_user_subscription pbus\n        on ibi.subscription_id = pbus.subscription_integration_id\n    WHERE\n        ibs.payable_with <> 'credit_card'\n        and ibs.plan_identifier <> 'plano_pacotes'\n        AND ibi.expired_at IS NULL\n        AND ibi.status = 'pending'\n)\nSELECT\n    nome,\n    id_user,\n    brokers_id,\n    email,\n    numero,\n    link,\n    validade,\n    CASE (validade - CURRENT_DATE)\n        WHEN  2  THEN -2    -- lembrete para 2 para vencer\n        WHEN -2  THEN 2   -- vencido há 2 dias\n        WHEN -5  THEN 5   -- vencido há 5 dias\n        WHEN -7  THEN 7   -- vencido há 10 dias\n        ELSE NULL         -- importante ter um fallback\n    END AS vencido\nFROM faturas_base\nWHERE (validade - CURRENT_DATE) IN (2, -2, -5, -7)\ngroup by faturas_base.nome, faturas_base.id_user, faturas_base.brokers_id, faturas_base.email, faturas_base.numero, faturas_base.validade, faturas_base.link;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4464,
+        1712
+      ],
+      "id": "dbf6543f-d0ea-40c0-a591-b99f27e9b964",
+      "name": "get faturas - iugu/brokers",
+      "credentials": {
+        "postgres": {
+          "id": "wibqDCKRnOAY4nAs",
+          "name": "redshift"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "column": "data_max_envio",
+              "value": "={{ $today }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3408,
+        1728
+      ],
+      "id": "1ae2b07b-2245-4b37-b026-92792f895e8c",
+      "name": "exists cadencia?",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c823d2c9-6dbe-441b-85e2-3e0be46ef42a",
+              "leftValue": "={{ $('exists cadencia?').last().json.isEmpty() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3136,
+        1728
+      ],
+      "id": "918cd998-08ab-4703-951b-ab470a00eaa3",
+      "name": "verificação cadencia"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "25891568-9024-420c-926d-e80dd54c8de1",
+              "leftValue": "={{ $('loop').item.json.numero }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2880,
+        1712
+      ],
+      "id": "00bfb798-ba0d-4993-8319-55b90816076c",
+      "name": "tem número?"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2400,
+        1728
+      ],
+      "id": "a16a1aaf-6d8e-4560-b868-e9d75ef88aae",
+      "name": "Wait",
+      "webhookId": "2a07d150-2d46-4aa0-bd14-85ecc6088637"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a7984b0d-afbb-42ce-9c1a-c601a9401478",
+              "leftValue": "={{ $('1tentativa').last().json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1840,
+        1728
+      ],
+      "id": "c14726b5-acf8-4781-a510-6fa4b8caf7d6",
+      "name": "tem info pessoa?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "681fb7e4-3d22-4b8c-b282-630d5a2dbcc1",
+              "leftValue": "={{ $('deal').last().json.item.person }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -464,
+        2112
+      ],
+      "id": "ba6e3ffb-9ffc-4b55-917c-71cdd1e59ad1",
+      "name": "tem pessoa?"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data = $(\"person\").last().json;\n\nlet rawName = data.Nome || \"\";\nlet rawPhone = data.Telefone?.[0]?.value || \"\";\n\n// Função para normalizar o nome\nfunction normalizeName(name) {\n    name = name.trim().toLowerCase();\n    return name.charAt(0).toUpperCase() + name.slice(1);\n}\n\nfunction normalizePhone(phone) {\n    // 1. Remove todos os caracteres que não são números\n    let digits = phone.replace(/\\D/g, \"\");\n\n    // 2. Se começar com '55', remove para processar o número\n    if (digits.startsWith(\"55\")) {\n        digits = digits.slice(2);\n    }\n\n    // 3. Verifica se tem 10 ou 11 dígitos após remoção do 55\n    if (digits.length !== 10 && digits.length !== 11) {\n        throw new Error(\"Número inválido: deve ter 10 ou 11 dígitos após remover o código do país.\");\n    }\n\n    // 4. Se tem 10 dígitos, assume que está faltando o '9' e adiciona após o DDD\n    if (digits.length === 10) {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2);\n    }\n\n    // 5. Se tem 11 dígitos mas o terceiro dígito não é '9', adiciona (corrige números mal formatados)\n    if (digits.length === 11 && digits[2] !== '9') {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2, 10);\n    }\n\n    // 6. Número final deve ter 11 dígitos (2 DDD + 9 + 8 números)\n    if (digits.length !== 11) {\n        throw new Error(\"Número inválido após normalização.\");\n    }\n\n    // 7. Adiciona o código do país '55'\n    return \"55\" + digits;\n}\n\nlet name = normalizeName(rawName);\nlet phone = normalizePhone(rawPhone);\n\nlet crm_type = \"person\"\nlet crm_type_id = data.ID\n\nreturn { name, phone, crm_type, crm_type_id };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        1840
+      ],
+      "id": "afcf4684-f64a-465b-8651-b3c583718c0f",
+      "name": "formatação deal/person",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data = $(\"person_last\").last().json;\n\nlet rawName = data?.Nome || \"\";\nlet rawPhone = data?.Telefone?.[0]?.value || \"\";\n\n// Normaliza o nome\nfunction normalizeName(name) {\n    name = name.trim().toLowerCase();\n    return name ? name.charAt(0).toUpperCase() + name.slice(1) : \"\";\n}\n\n// Normaliza o telefone\nfunction normalizePhone(phone) {\n    // 1. Remove todos os caracteres que não são números\n    let digits = phone.replace(/\\D/g, \"\");\n\n    // 2. Se começar com '55', remove para processar o número\n    if (digits.startsWith(\"55\")) {\n        digits = digits.slice(2);\n    }\n\n    // 3. Verifica se tem 10 ou 11 dígitos após remoção do 55\n    if (digits.length !== 10 && digits.length !== 11) {\n        throw new Error(\"Número inválido: deve ter 10 ou 11 dígitos após remover o código do país.\");\n    }\n\n    // 4. Se tem 10 dígitos, assume que está faltando o '9' e adiciona após o DDD\n    if (digits.length === 10) {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2);\n    }\n\n    // 5. Se tem 11 dígitos mas o terceiro dígito não é '9', adiciona (corrige números mal formatados)\n    if (digits.length === 11 && digits[2] !== '9') {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2, 10);\n    }\n\n    // 6. Número final deve ter 11 dígitos (2 DDD + 9 + 8 números)\n    if (digits.length !== 11) {\n        throw new Error(\"Número inválido após normalização.\");\n    }\n\n    // 7. Adiciona o código do país '55'\n    return \"55\" + digits;\n}\n\nlet name = normalizeName(rawName);\nlet phone = normalizePhone(rawPhone);\n\nlet crm_type = \"person\"\nlet crm_type_id = data.ID\n\nreturn { name, phone, crm_type, crm_type_id };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2128,
+        2544
+      ],
+      "id": "c1a3938a-a8c4-42c4-87b4-c7d1e4b6b955",
+      "name": "formatação deal/org/person",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data = $(\"organization\").last().json;\n\nlet rawName = data?.Nome || \"\";\nlet rawPhone = data?.Telefone || \"\";\n\n// Normaliza o nome\nfunction normalizeName(name) {\n    name = name.trim().toLowerCase();\n    return name ? name.charAt(0).toUpperCase() + name.slice(1) : \"\";\n}\n\n// Normaliza o telefone\nfunction normalizePhone(phone) {\n    // 1. Remove todos os caracteres que não são números\n    let digits = phone.replace(/\\D/g, \"\");\n\n    // 2. Se começar com '55', remove para processar o número\n    if (digits.startsWith(\"55\")) {\n        digits = digits.slice(2);\n    }\n\n    // 3. Verifica se tem 10 ou 11 dígitos após remoção do 55\n    if (digits.length !== 10 && digits.length !== 11) {\n        throw new Error(\"Número inválido: deve ter 10 ou 11 dígitos após remover o código do país.\");\n    }\n\n    // 4. Se tem 10 dígitos, assume que está faltando o '9' e adiciona após o DDD\n    if (digits.length === 10) {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2);\n    }\n\n    // 5. Se tem 11 dígitos mas o terceiro dígito não é '9', adiciona (corrige números mal formatados)\n    if (digits.length === 11 && digits[2] !== '9') {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2, 10);\n    }\n\n    // 6. Número final deve ter 11 dígitos (2 DDD + 9 + 8 números)\n    if (digits.length !== 11) {\n        throw new Error(\"Número inválido após normalização.\");\n    }\n\n    // 7. Adiciona o código do país '55'\n    return \"55\" + digits;\n}\n\nlet name = normalizeName(rawName);\nlet phone = normalizePhone(rawPhone);\n\nlet crm_type = \"organization\"\nlet crm_type_id = data?.ID\n\nreturn { name, phone, crm_type, crm_type_id };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        2080
+      ],
+      "id": "1661db1c-7a94-4bee-8532-d0325289e2b5",
+      "name": "formatação deal/org",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1488,
+        2352
+      ],
+      "id": "8ba45e73-7670-4a93-a391-25df2322fc70",
+      "name": "Erro enviar (Sem número)"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data = $(\"1tentativa\").last().json;\n\nlet rawName = data.name || \"\";\nlet rawPhone = data.phones?.[0] || \"\";\n\n// Função para normalizar o nome\nfunction normalizeName(name) {\n    name = name.trim().toLowerCase();\n    return name.charAt(0).toUpperCase() + name.slice(1);\n}\n\n// Função para normalizar o nome\nfunction normalizePhone(phone) {\n    // 1. Remove todos os caracteres que não são números\n    let digits = phone.replace(/\\D/g, \"\");\n\n    // 2. Se começar com '55', remove para processar o número\n    if (digits.startsWith(\"55\")) {\n        digits = digits.slice(2);\n    }\n\n    // 3. Verifica se tem 10 ou 11 dígitos após remoção do 55\n    if (digits.length !== 10 && digits.length !== 11) {\n        throw new Error(\"Número inválido: deve ter 10 ou 11 dígitos após remover o código do país.\");\n    }\n\n    // 4. Se tem 10 dígitos, assume que está faltando o '9' e adiciona após o DDD\n    if (digits.length === 10) {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2);\n    }\n\n    // 5. Se tem 11 dígitos mas o terceiro dígito não é '9', adiciona (corrige números mal formatados)\n    if (digits.length === 11 && digits[2] !== '9') {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2, 10);\n    }\n\n    // 6. Número final deve ter 11 dígitos (2 DDD + 9 + 8 números)\n    if (digits.length !== 11) {\n        throw new Error(\"Número inválido após normalização.\");\n    }\n\n    // 7. Adiciona o código do país '55'\n    return \"55\" + digits;\n}\n\nlet name = normalizeName(rawName);\nlet phone = normalizePhone(rawPhone);\nlet crm_type = \"person\"\nlet crm_type_id = data.id\n\nreturn { name, phone, crm_type, crm_type_id };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        1328
+      ],
+      "id": "18f1bb55-b94c-407c-8699-3caf549a6490",
+      "name": "formatação person",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "get",
+        "personId": "={{ $('1tentativa').item.json.id }}",
+        "resolveProperties": true
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        1312
+      ],
+      "id": "f6b839ed-633e-4200-988b-968ed2e83d2f",
+      "name": "get person from search",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        688,
+        800
+      ],
+      "id": "d8be3287-e553-4923-99ee-0d8dee88d1c5",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "term": "={{ $('loop').item.json.id_user }}",
+        "exactMatch": true,
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        1312
+      ],
+      "id": "14993fab-4837-4113-8970-8fe2234a49fe",
+      "name": "get deal info",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9e841126-01c4-40f4-a2ae-7c46e8942f15",
+              "leftValue": "={{ $('get deal info').all().some(item => item.json.item.stage.id === 118) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        1312
+      ],
+      "id": "23736bf0-43c5-4b24-872f-216eeca119ca",
+      "name": "negocioação/cancelamento/cobrança"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9e841126-01c4-40f4-a2ae-7c46e8942f15",
+              "leftValue": "={{ $('deal').all().some(item => item.json.item.stage.id === 118) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1040,
+        2080
+      ],
+      "id": "6687d94a-2538-4838-a14f-efb2095fe5fb",
+      "name": "negocioação/cancelamento/cobrança1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        1680
+      ],
+      "id": "e502e8c9-b164-43bd-a694-1c3d6e4e312c",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f7f6fa7c-4219-4108-a26b-f219ec053555",
+              "leftValue": "={{ $('organization').last().json.last_activity.person_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        2352
+      ],
+      "id": "9e66fcd5-51a1-407e-ad5c-f7b113e40b29",
+      "name": "person_id (duplo negativo)"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data = $(\"loop\").last().json;\nlet data_deal = $(\"deal1\").last().json.item;\n\nlet rawName = data.nome || \"\";\nlet rawPhone = data.numero || \"\";\n\n// Função para normalizar o nome\nfunction normalizeName(name) {\n    name = name.trim().toLowerCase();\n    return name.charAt(0).toUpperCase() + name.slice(1);\n}\n\n// Função para normalizar o telefone\nfunction normalizePhone(phone) {\n    let digits = phone.replace(/\\D/g, \"\");\n\n    if (digits.startsWith(\"55\")) {\n        digits = digits.slice(2);\n    }\n\n    if (digits.length !== 10 && digits.length !== 11) {\n        throw new Error(\"Número inválido: deve ter 10 ou 11 dígitos após remover o código do país.\");\n    }\n\n    if (digits.length === 10) {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2);\n    }\n\n    if (digits.length === 11 && digits[2] !== '9') {\n        digits = digits.slice(0, 2) + '9' + digits.slice(2, 10);\n    }\n\n    if (digits.length !== 11) {\n        throw new Error(\"Número inválido após normalização.\");\n    }\n\n    return \"55\" + digits;\n}\n\nlet crm_type = null;\nlet crm_type_id = null;\n\nif (data_deal.person?.id) {\n    crm_type = \"person\";\n    crm_type_id = data_deal.person.id;\n} else if (data_deal.organization?.id) {\n    crm_type = \"organization\";\n    crm_type_id = data_deal.organization.id;\n}\n\nlet name = normalizeName(rawName);\nlet phone = normalizePhone(rawPhone);\n\nreturn { name, phone, crm_type, crm_type_id };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        384
+      ],
+      "id": "0f465fdb-3c2f-4834-9754-1026fbf8daba",
+      "name": "formatação brokers/banco",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "term": "={{ $('loop').last().json.id_user }}",
+        "exactMatch": true,
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        368
+      ],
+      "id": "3c706b26-87cc-4cf5-839a-018d3be311ee",
+      "name": "deal1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9e841126-01c4-40f4-a2ae-7c46e8942f15",
+              "leftValue": "={{ $('deal1').all().some(item => item.json.item.stage.id === 118) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -400,
+        368
+      ],
+      "id": "877514e6-9778-4377-9e7d-c186acbbf0bc",
+      "name": "negocioação/cancelamento/cobrança2"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2400,
+        1520
+      ],
+      "id": "79d15fa4-0289-42a5-91cf-50e14e1c9118",
+      "name": "Wait1",
+      "webhookId": "3eab7e10-8d25-46dc-9bf3-a98c80213200"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "eec55ed7-c923-4b5e-b1cf-5bc1d623035c",
+      "name": "No Operation, do nothing2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        528
+      ],
+      "id": "7ba5fc4a-2be6-46cb-86a1-0bb3a3461a90",
+      "name": "Erro enviar (Sem número)1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        1488
+      ],
+      "id": "987c56be-6664-4c62-9ab1-d654112062c8",
+      "name": "Erro enviar (Sem número)2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        704,
+        1920
+      ],
+      "id": "3df8cdda-a769-4e33-8331-3f523c95676c",
+      "name": "Erro enviar (Sem número)3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1888,
+        2112
+      ],
+      "id": "f2c63d44-ffb4-49bc-91df-4db752b8648a",
+      "name": "Erro enviar (Sem número)4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('loop').last().json.nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('loop').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2432,
+        2560
+      ],
+      "id": "c63bc50a-3ec0-4aa7-b60f-edc1d043482a",
+      "name": "Erro enviar (Sem número)5"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select count(*)\nfrom brokers_cs.cobranca_cadencia cc \nwhere cc.data_max_envio::date = CURRENT_DATE",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3504,
+        1120
+      ],
+      "id": "3ffe027c-8476-4eec-a416-e525fa029a33",
+      "name": "count",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cliente_nome": "={{ $('Switch').last().json.name }}",
+            "cliente_whatsapp": "=+{{ $('Switch').last().json.phone }}",
+            "data_vencimento": "={{ $('loop').last().json.validade }}",
+            "cliente_phone": "=+{{ $('Switch').last().json.phone }}",
+            "mensagem": "=Olá, {{ $('Switch').last().json.name.split(\" \", 1) }}, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\nSua fatura segue em aberto há 5 dias. Para evitar a interrupção do serviço, pedimos que regularize o pagamento quanto antes.\n🔗 {{ $('loop').last().json.link }}\nSe tiver dúvidas ou já realizou o pagamento, fale com a gente!",
+            "data_max_envio": "={{ $today }}",
+            "created_at": "={{ $now }}",
+            "crm_type": "={{ $('Switch').last().json.crm_type }}",
+            "crm_type_id": "={{ $('Switch').last().json.crm_type_id }}",
+            "email": "={{ $('loop').last().json.email }}",
+            "tempo_cobranca": "=-5"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mandar_suporte",
+              "displayName": "mandar_suporte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3408,
+        3200
+      ],
+      "id": "86367e2c-91dd-4b33-b5d4-43e0c47e736e",
+      "name": "5 atrasado",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      },
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "get faturas - iugu/brokers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "2 adiantado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no dia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "2 atrasado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "5 atrasado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "7 atrasado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "10 atrasado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "15 atrasado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "20 atrasado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "25 atrasado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "30 atrasado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2 adiantado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "no dia": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2 atrasado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7 atrasado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10 atrasado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "15 atrasado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "20 atrasado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "25 atrasado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "30 atrasado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request7": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request8": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request9": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request10": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person": {
+      "main": [
+        [
+          {
+            "node": "formatação deal/person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "organization": {
+      "main": [
+        [
+          {
+            "node": "person_id (duplo negativo)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deal": {
+      "main": [
+        [
+          {
+            "node": "negocioação/cancelamento/cobrança1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1tentativa": {
+      "main": [
+        [
+          {
+            "node": "tem info pessoa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "telefone": {
+      "main": [
+        [
+          {
+            "node": "formatação deal/org",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Erro enviar (Sem número)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person_last": {
+      "main": [
+        [
+          {
+            "node": "formatação deal/org/person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "loop": {
+      "main": [
+        [
+          {
+            "node": "count",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "exists cadencia?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get faturas - iugu/brokers": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "exists cadencia?": {
+      "main": [
+        [
+          {
+            "node": "verificação cadencia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificação cadencia": {
+      "main": [
+        [
+          {
+            "node": "tem número?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem número?": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "1tentativa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem info pessoa?": {
+      "main": [
+        [
+          {
+            "node": "get person from search",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem pessoa?": {
+      "main": [
+        [
+          {
+            "node": "person",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "organization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação deal/person": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Erro enviar (Sem número)3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação deal/org/person": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Erro enviar (Sem número)5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação deal/org": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Erro enviar (Sem número)4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Erro enviar (Sem número)": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação person": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Erro enviar (Sem número)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get person from search": {
+      "main": [
+        [
+          {
+            "node": "get deal info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get deal info": {
+      "main": [
+        [
+          {
+            "node": "negocioação/cancelamento/cobrança",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "negocioação/cancelamento/cobrança": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "formatação person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "negocioação/cancelamento/cobrança1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "tem pessoa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing1": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person_id (duplo negativo)": {
+      "main": [
+        [
+          {
+            "node": "telefone",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "person_last",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação brokers/banco": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Erro enviar (Sem número)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deal1": {
+      "main": [
+        [
+          {
+            "node": "negocioação/cancelamento/cobrança2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "negocioação/cancelamento/cobrança2": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "formatação brokers/banco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "deal1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing2": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Erro enviar (Sem número)1": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Erro enviar (Sem número)2": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Erro enviar (Sem número)3": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Erro enviar (Sem número)4": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Erro enviar (Sem número)5": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "count": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5 atrasado": {
+      "main": [
+        [
+          {
+            "node": "loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "4169740f-998b-4128-9c54-040f5b66e707",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "HaDKFB4TtOvAjEXv",
+  "tags": [
+    {
+      "createdAt": "2025-04-29T18:08:11.645Z",
+      "updatedAt": "2025-04-29T18:08:11.645Z",
+      "id": "nd6RHGJa9oL2XRr9",
+      "name": "Financeiro"
+    }
+  ]
+}

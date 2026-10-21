@@ -1,0 +1,374 @@
+{
+  "name": "CS - INADS",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH ranked_subscriptions AS (\n    SELECT \n        pbu.user_id                    AS brokers_user_id,\n        ibs.customer_id                AS iugu_customer_id, \n        ibs.customer_name              AS iugu_customer_name, \n        ibs.customer_email             AS iugu_customer_email, \n        ibs.subscription_id            AS iugu_subscription_id, \n        ibs.plan_name                  AS plan_name, \n        ibs.created_at                 AS criacao_assinatura,\n        ibs.expires_at                 AS vencimento_assinatura,\n        \n        DATEDIFF(day, GETDATE(), ibs.expires_at) AS INAD_invoice,\n        CASE \n            WHEN DATEDIFF(day, ibs.expires_at, GETDATE()) < 7 THEN 'INAD 7'\n            WHEN DATEDIFF(day, ibs.expires_at, GETDATE()) < 30 THEN 'INAD 30'\n            ELSE 'INAD > 30'\n        END AS INAD_subscription_status,\n        ibi.status                     AS iugu_invoice_status,\n        ibi.due_date                   AS vencimento_fatura,\n        ibi.booklet_id                 AS id_carne,\n        \n        -- Calcula a diferença absoluta entre due_date e expires_at para ranking\n        ABS(DATEDIFF(day, ibi.due_date, ibs.expires_at)) AS due_expires_diff,\n        \n        -- Ranking por proximidade do due_date com expires_at, por customer_id\n        ROW_NUMBER() OVER (\n            PARTITION BY ibs.customer_id \n            ORDER BY ABS(DATEDIFF(day, ibi.due_date, ibs.expires_at)) ASC,\n                     ibi.due_date DESC  -- Em caso de empate, pega o mais recente\n        ) AS rn\n\n    FROM analytics_v2.iugu_brokers_subscriptions AS ibs\n    LEFT JOIN analytics_v2.platform_brokers_user_subscription AS pbu \n        ON ibs.subscription_id = pbu.subscription_integration_id\n    LEFT JOIN analytics_v2.iugu_brokers_invoices AS ibi \n        ON ibs.subscription_id = ibi.subscription_id\n    WHERE \n        ibs.expires_at BETWEEN \n            DATE_TRUNC('month', CURRENT_DATE)::date\n            AND (DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month - 1 day')::date \n        AND ibi.expired_at IS NULL\n        AND ibs.active = 't' \n        AND pbu.subscription_integration_id IS NOT NULL\n        AND ibi.status <> 'refunded'\n\t\tAND ibi.status <> 'partially_refunded'\n)\nSELECT \n    brokers_user_id,\n    iugu_customer_id, \n    iugu_customer_name, \n    iugu_customer_email, \n    iugu_subscription_id, \n    plan_name, \n    criacao_assinatura,\n    vencimento_assinatura,\n    INAD_invoice,\n    INAD_subscription_status,\n    iugu_invoice_status,\n    vencimento_fatura,\n    id_carne\nFROM ranked_subscriptions\nWHERE rn = 1  -- Mantém apenas a linha com menor diferença entre due_date e expires_at\nORDER BY vencimento_fatura DESC;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "635e151d-2b95-43fa-99c6-f476e20bb0ab",
+      "name": "get faturas - iugu/brokers",
+      "credentials": {
+        "postgres": {
+          "id": "wibqDCKRnOAY4nAs",
+          "name": "redshift"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        0
+      ],
+      "id": "e9d81eef-7447-4110-b662-4766b5ec9c18",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "=INAD - {{ $('get faturas - iugu/brokers').item.json.iugu_customer_name }}",
+        "type": "task",
+        "additionalFields": {
+          "deal_id": "={{ $json.id }}",
+          "due_date": "={{ $('Loop Over Items').item.json.vencimento_assinatura }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        0
+      ],
+      "id": "245e16c7-aced-4ffa-b39d-c12ddd25144b",
+      "name": "Create an activity",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        256,
+        0
+      ],
+      "id": "b76b364d-f781-49d9-997d-32ee2342f31f",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        1552,
+        256
+      ],
+      "id": "64f5594c-b6e3-40bb-8660-ba2b25af5121"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "term": "={{ $json.iugu_customer_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        496,
+        16
+      ],
+      "id": "56b27a28-c7b2-474f-872c-95520a1ab0c9",
+      "name": "Search a deal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5a6ca9a4-460e-43b6-a072-e36142d56548",
+              "leftValue": "={{ $json.stage.name }}",
+              "rightValue": "Clientes Base",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "69a76676-6d81-4db4-b52c-4e805c106abc",
+              "leftValue": "={{ $json.title }}",
+              "rightValue": "(cópia)",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        16
+      ],
+      "id": "39318963-06e8-4f00-a0a8-c0d1ac4da922",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "duplicate",
+        "dealId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        960,
+        0
+      ],
+      "id": "8c3a11ad-51da-4121-b09a-e74bf2e08028",
+      "name": "Duplicate a deal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dealId": "={{ $json.id }}",
+        "updateFields": {
+          "user_id": 24866074
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        0
+      ],
+      "id": "e3fbcbed-420c-4c3c-8edf-8c397b8f776d",
+      "name": "Update a deal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAtZXWxvY/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=qpdmiQf1ZoAG3XEw4AYAnI7357mXTyiDH1_X0sqpV4M",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"✅ Quantidade total de Inads identificados\",\n        \"subtitle\": \"Resumo da Operação\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Total de Pessoas\",\n                \"content\": \"{{ $('get faturas - iugu/brokers').all().length }}\" \n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        496,
+        -288
+      ],
+      "id": "866ca237-4d70-4d59-a6d7-0e645fdcc12a",
+      "name": "HTTP Request",
+      "executeOnce": true
+    }
+  ],
+  "pinData": {
+    "get faturas - iugu/brokers": [
+      {
+        "json": {
+          "brokers_user_id": "54128",
+          "iugu_customer_id": "4D5537423AA54E6A8986B365E3CF9641",
+          "iugu_customer_name": "Metta Investimentos Negócios Imobiliários LTDA",
+          "iugu_customer_email": "maiquel@mettainvestimentos.com.br",
+          "iugu_subscription_id": "B2737D350E564235B331FDDF69877B66",
+          "plan_name": "Plano Pro Anual",
+          "criacao_assinatura": "2024-12-30T17:22:50.000Z",
+          "vencimento_assinatura": "2025-12-30T00:00:00.000Z",
+          "inad_invoice": "21",
+          "inad_subscription_status": "INAD 7",
+          "iugu_invoice_status": "paid",
+          "vencimento_fatura": "2025-12-30T00:00:00.000Z",
+          "id_carne": null
+        }
+      },
+      {
+        "json": {
+          "brokers_user_id": "113241",
+          "iugu_customer_id": "054C3437FCF34B5CA4866CEE9CA5ABA1",
+          "iugu_customer_name": "Marcelo Augusto de Oliveira",
+          "iugu_customer_email": "oliveira-ma@uol.com.br",
+          "iugu_subscription_id": "F7C656CD0F26417BB60058B978DE7B51",
+          "plan_name": "Plano Starter Mensal",
+          "criacao_assinatura": "2025-09-17T19:19:50.000Z",
+          "vencimento_assinatura": "2025-12-18T00:00:00.000Z",
+          "inad_invoice": "9",
+          "inad_subscription_status": "INAD 7",
+          "iugu_invoice_status": "pending",
+          "vencimento_fatura": "2025-12-18T00:00:00.000Z",
+          "id_carne": null
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "get faturas - iugu/brokers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get faturas - iugu/brokers": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search a deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an activity": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search a deal": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Duplicate a deal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Duplicate a deal": {
+      "main": [
+        [
+          {
+            "node": "Update a deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a deal": {
+      "main": [
+        [
+          {
+            "node": "Create an activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "b34262d3-aece-4dc3-8aba-77c29c663330",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "A9tQCobKUPL6N9lZ",
+  "tags": []
+}

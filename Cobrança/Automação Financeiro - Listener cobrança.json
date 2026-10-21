@@ -1,0 +1,1293 @@
+{
+  "name": "Automação Financeiro - Listener cobrança",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "7998aed2-3521-4624-aa41-235a8aeafd57",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -6224,
+        1008
+      ],
+      "id": "79646e31-8091-4984-905c-3db6d7a357f0",
+      "name": "Webhook",
+      "webhookId": "7998aed2-3521-4624-aa41-235a8aeafd57"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "33a08423-2be0-4008-b2d4-ef4fb96930a4",
+              "leftValue": "={{ $json.body.data.remoteJid }}",
+              "rightValue": "@g.us",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -5936,
+        1008
+      ],
+      "id": "14b12064-4c6d-46f3-b0e0-d08e02d714e9",
+      "name": "IF_IS_NOT_GROUP"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c7b24306-5a4e-42d9-9969-ea195a7498a1",
+              "leftValue": "={{ $json.body.data.fromMe }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "3f783051-3023-423f-ac33-c54f151bd273",
+              "leftValue": "={{ $json.body.data.key.fromMe }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "75fef8b9-eea7-42b9-b65c-b01f02e187cc",
+      "name": "If_From_ME",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -5616,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.attemics.com.br/core/v2/api/chats/send-text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"{{ $('formata numero').item.json.number }}\",\n  \"contactId\": \"{{ $('Buscar contato attemics').item.json.id }}\",\n  \"message\": \"Esta mensagem é automatizada, em caso de cancelamento/re-negociação/ajuda, entre em contato:\",\n  \"isWhisper\": false,\n  \"forceSend\": true,\n  \"verifyContact\": true,\n  \"delayInSeconds\": 0,\n  \"linkPreview\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3040,
+        832
+      ],
+      "id": "f7011109-0836-4745-b238-2941e12623ea",
+      "name": "Enviar mensagem - Attemics",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.attemics.com.br/core/v2/api/contacts/number/{{ $('formata numero').item.json.number}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3440,
+        848
+      ],
+      "id": "edd78bbb-76df-45ee-bc2c-beac0effdff6",
+      "name": "Buscar contato attemics",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.attemics.com.br/core/v2/api/chats/send-contacts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"{{ $('formata numero').item.json.number }}\",\n  \"contactId\": \"{{ $('Buscar contato attemics').item.json.id }}\",\n  \"contacts\": [\n    {\n      \"number\": \"5545999787039\",\n      \"name\": \"Suporte EEmovel\"\n    }\n  ],\n  \"forceSend\": true,\n  \"verifyContact\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2224,
+        720
+      ],
+      "id": "919dfb51-bda5-4273-bca3-38d33e7df3a6",
+      "name": "Enviar mensagem - Attemics1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('registro').last().json.crm_type }}",
+                    "rightValue": "person",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "87954e29-eadc-4a44-8c80-32edc022ce4e"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "person"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "81a35ec5-6718-426c-a647-9dfca333a41b",
+                    "leftValue": "={{ $('registro').last().json.crm_type }}",
+                    "rightValue": "organization",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "organization"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -736,
+        320
+      ],
+      "id": "7a4ee44d-a098-49c0-be82-613124faaca1",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT *\nFROM brokers_cs.cobranca_cadencia cc\nleft join brokers_cs.cobranca_attemics_contact cac\n  on cc.id = cac.id_contato\nWHERE cc.cliente_whatsapp = '+{{ $('formata numero').item.json.number }}'\n  AND cc.status = true\n  AND cc.mandar_suporte = false\n  AND cac.closed = false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4640,
+        1008
+      ],
+      "id": "96268637-fe59-4ff0-80ef-fc8d9bab9640",
+      "name": "registro",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.attemics.com.br/core/v2/api/chats/{{ $('Buscar contato attemics').item.json.curChatId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1584,
+        320
+      ],
+      "id": "fe7c0773-607c-484e-b878-32bebf36b3bc",
+      "name": "get conversa"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2560,
+        720
+      ],
+      "id": "a33d0b9f-20ed-479c-b70c-5590765ceef2",
+      "name": "Wait",
+      "webhookId": "4118d19a-01e3-4fba-b14e-182f6d5849a8"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Supondo que seu JSON completo esteja no item atual do n8n:\nconst data = $(\"get conversa\").last().json;\n\n// Extrai e ordena as mensagens pelo campo unixTimeMessage\nconst mensagensOrdenadas = data.messages\n  .filter(msg => msg.text && msg.text.trim() !== '') // Ignora mensagens vazias\n  .sort((a, b) => a.unixTimeMessage - b.unixTimeMessage);\n\n// Formata cada mensagem com nome do remetente e conteúdo\nconst mensagensFormatadas = mensagensOrdenadas.map(msg => {\n  return `${msg.senderName}: ${msg.text}`;\n});\n\n// Junta tudo em um único texto (por exemplo, para campo de nota no Pipedrive)\nconst textoFinal = mensagensFormatadas.join('<br>');\n\n// Retorna para uso em um próximo node (ex: criar atividade no Pipedrive)\nreturn [\n  {\n    json: {\n      mensagensFormatadas: textoFinal\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        320
+      ],
+      "id": "cb468b2d-5dce-4a99-bc3b-84734d73bde3",
+      "name": "mensagens formatadas"
+    },
+    {
+      "parameters": {
+        "jsCode": "function normalizePhone(phone) {\n    if (!phone) return null;\n\n    if (typeof phone !== \"string\") {\n        phone = String(phone);\n    }\n\n    // Remove qualquer caractere que não seja número\n    let digitsOnly = phone.replace(/[^\\d]/g, \"\");\n\n    // Adiciona código do Brasil se não existir\n    if (!digitsOnly.startsWith(\"55\")) {\n        if (digitsOnly.length === 11 || digitsOnly.length === 10) {\n            digitsOnly = \"55\" + digitsOnly;\n        } else if (digitsOnly.length === 9) {\n            digitsOnly = \"5545\" + digitsOnly; // DDD padrão 45\n        }\n    }\n\n    // Certifica que há apenas números após \"55\"\n    digitsOnly = \"55\" + digitsOnly.slice(2).replace(/[^\\d]/g, \"\");\n\n    // Se tiver 13 dígitos e o quinto for \"9\", remove um nono dígito extra\n    if (digitsOnly.length === 13 && digitsOnly[4] === \"9\") {\n        digitsOnly = digitsOnly.slice(0, 4) + digitsOnly.slice(5);\n    }\n\n    // Lista de DDDs que devem ter 9 dígitos para celulares\n    const dddsComNonoDigito = [\n        \"11\", \"12\", \"13\", \"14\", \"15\", \"16\", \"17\", \"18\", \"19\", // SP\n        \"21\", \"22\", \"24\", // RJ\n        \"27\", \"28\", // ES\n        \"31\", \"32\", \"33\", \"34\", \"35\", \"37\", \"38\", // MG\n        \"41\", \"42\", \"43\", \"44\", \"45\", \"46\", // PR\n        \"47\", \"48\", \"49\", // SC\n        \"51\", \"53\", \"54\", \"55\", // RS\n        \"61\", // DF\n        \"62\", \"64\", // GO\n        \"63\", // TO\n        \"65\", \"66\", // MT\n        \"67\", // MS\n        \"68\", \"69\", // AC, RO\n        \"71\", \"73\", \"74\", \"75\", \"77\", // BA\n        \"79\", // SE\n        \"81\", \"87\", // PE\n        \"82\", // AL\n        \"83\", // PB\n        \"84\", // RN\n        \"85\", \"88\", // CE\n        \"86\", \"89\", // PI\n        \"91\", \"93\", \"94\", // PA\n        \"92\", \"97\", // AM\n        \"95\", // RR\n        \"96\", // AP\n        \"98\", \"99\" // MA\n    ];\n\n    // Verifica DDD e corrige formato\n    if (digitsOnly.length === 12) {\n        const ddd = digitsOnly.slice(2, 4);\n        const numero = digitsOnly.slice(4);\n\n        // Se for um DDD que exige o nono dígito e estiver faltando, adiciona \"9\"\n        if (dddsComNonoDigito.includes(ddd) && numero.length === 8) {\n            return `55${ddd}9${numero}`;\n        }\n\n        return digitsOnly;\n    }\n\n    return null; // Retorna null se não estiver no formato correto\n}\n\n\nreturn {\"number\":normalizePhone($('Webhook').first().json.body.data.key.remoteJid.split(\"@\")[0] ) };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4944,
+        1008
+      ],
+      "id": "dfcd8130-6127-43d3-81d9-d3c1150b14ec",
+      "name": "formata numero"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dcbb4bad-ad39-4228-80dd-9ce37b98d51d",
+              "leftValue": "={{ $('registro').item.json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3808,
+        1008
+      ],
+      "id": "a816bec8-fd89-4c6e-9c13-f23c8a6c33fe",
+      "name": "tem registro?"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cobrança - Necessidade do suporte com a conversa nas notas",
+        "type": "Cobrança - Entrar em contato",
+        "additionalFields": {
+          "note": "={{ $('mensagens formatadas').item.json.mensagensFormatadas }}",
+          "org_id": "={{ $('registro').item.json.crm_type_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        480
+      ],
+      "id": "f1652c6e-c2ab-4e6d-9c3b-019a529f5b3d",
+      "name": "criar atividade - grupo",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cobrança - Necessidade do suporte com a conversa nas notas",
+        "type": "Cobrança - Entrar em contato",
+        "additionalFields": {
+          "note": "={{ $('mensagens formatadas').item.json.mensagensFormatadas }}",
+          "person_id": "={{ $('registro').item.json.crm_type_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        160
+      ],
+      "id": "11367d32-e121-4536-9fba-e310ed7ec9d9",
+      "name": "criar atividade - person",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.attemics.com.br/core/v2/api/chats/{{ $('registro').item.json.chat_id }}/finalize",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"sendMessageFinalized\": false,\n  \"fidelityUser\": false,\n  \"sendResearchSatisfaction\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        368,
+        304
+      ],
+      "id": "5de1731f-77f1-47df-8f86-8bd62d26bf4e",
+      "name": "fechar contato",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "mandar_suporte": true,
+            "id": "={{ $('registro').item.json.id_contato }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mandar_suporte",
+              "displayName": "mandar_suporte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        752,
+        288
+      ],
+      "id": "dadffa37-17b6-45ca-83c8-70a851739b7c",
+      "name": "update contato - suporte",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_attemics_contact",
+          "mode": "list",
+          "cachedResultName": "cobranca_attemics_contact"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": true,
+            "id": "={{ $('registro').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id_contato",
+              "displayName": "id_contato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1040,
+        288
+      ],
+      "id": "c8cd65bb-9c9d-427f-bdc9-330ce14c5a98",
+      "name": "update chat - closed",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Cliente - cancelamento/negociação\",\n        \"subtitle\": \"Detalhes do caso\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('registro').last().json.cliente_nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('registro').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Número\",\n                \"content\": \"{{ $('registro').last().json.cliente_whatsapp }}\"\n              }\n            },\n            {\n              \"buttons\": [\n                {\n                  \"textButton\": {\n                    \"text\": \"🔗 Link - Pipedrive\",\n                    \"onClick\": {\n                      \"openLink\": {\n                        \"url\": \"https://eemovelbrokers.pipedrive.com/activities/list/user/everyone?selected={{ $('criar atividade - person').item.json.id || $('criar atividade - grupo').item.json.id }}&tab=activity\"\n                      }\n                    }\n                  }\n                }\n              ]\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1344,
+        288
+      ],
+      "id": "13c40049-eecd-4ca8-9d7a-daadcc2c4ce0",
+      "name": "mensagem erro - suporte"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -6064,
+        1392
+      ],
+      "id": "ebe2c57e-f208-4c4a-a916-697a4542ed0b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.attemics.com.br/core/v2/api/chats/{{ $('registros de chat aberto').item.json.chat_id }}/finalize",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"sendMessageFinalized\": false,\n  \"fidelityUser\": false,\n  \"sendResearchSatisfaction\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -5440,
+        1392
+      ],
+      "id": "e2a6213c-7d70-49d2-8f5b-b337dc90c3a5",
+      "name": "fechar contato1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_attemics_contact",
+          "mode": "list",
+          "cachedResultName": "cobranca_attemics_contact"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": true,
+            "id": "={{ $('registros de chat aberto').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id_contato",
+              "displayName": "id_contato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -5008,
+        1360
+      ],
+      "id": "71178e2b-8d80-4848-9e3e-b6b6627984e1",
+      "name": "update chat - closed1",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT *\nFROM brokers_cs.cobranca_cadencia cc\nleft join brokers_cs.cobranca_attemics_contact cac\n  on cc.id = cac.id_contato\n  AND cc.status = true\n  AND cc.mandar_suporte = false\n  AND cac.closed = false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -5744,
+        1392
+      ],
+      "id": "8681fb5b-4950-47e9-88f6-c1b8e4da03b3",
+      "name": "registros de chat aberto",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('registro').last().json.cliente_nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('registro').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Número\",\n                \"content\": \"{{ $('registro').last().json.cliente_whatsapp }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        1312
+      ],
+      "id": "ebe41933-491e-4468-ad4b-0a52ae0a03b0",
+      "name": "mensagem erro - suporte1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d24e905e-cd6d-4288-8a96-a8169774d1c5",
+              "leftValue": "={{ $('Webhook').first().json.body.data.key.remoteJid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -5296,
+        1024
+      ],
+      "id": "e0d2d6a3-21ad-4f80-924e-de56cd6edaf6",
+      "name": "If_remoteJID_exists"
+    },
+    {
+      "parameters": {
+        "amount": 7
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -4208,
+        1008
+      ],
+      "id": "bf2a42e7-18c9-4670-b037-f41ead346a2a",
+      "name": "Wait1",
+      "webhookId": "458aa1d9-3af0-41f2-ba78-0fb4713e409c"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF_IS_NOT_GROUP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF_IS_NOT_GROUP": {
+      "main": [
+        [
+          {
+            "node": "If_From_ME",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If_From_ME": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If_remoteJID_exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar mensagem - Attemics": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar contato attemics": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensagem - Attemics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar mensagem - Attemics1": {
+      "main": [
+        [
+          {
+            "node": "get conversa",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "criar atividade - person",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "criar atividade - grupo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registro": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get conversa": {
+      "main": [
+        [
+          {
+            "node": "mensagens formatadas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensagem - Attemics1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagens formatadas": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formata numero": {
+      "main": [
+        [
+          {
+            "node": "registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem registro?": {
+      "main": [
+        [
+          {
+            "node": "Buscar contato attemics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar atividade - grupo": {
+      "main": [
+        [
+          {
+            "node": "fechar contato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar atividade - person": {
+      "main": [
+        [
+          {
+            "node": "fechar contato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fechar contato": {
+      "main": [
+        [
+          {
+            "node": "update contato - suporte",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update contato - suporte": {
+      "main": [
+        [
+          {
+            "node": "update chat - closed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update chat - closed": {
+      "main": [
+        [
+          {
+            "node": "mensagem erro - suporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "registros de chat aberto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fechar contato1": {
+      "main": [
+        [
+          {
+            "node": "update chat - closed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registros de chat aberto": {
+      "main": [
+        [
+          {
+            "node": "fechar contato1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If_remoteJID_exists": {
+      "main": [
+        [
+          {
+            "node": "formata numero",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "tem registro?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "d370de09-6a18-449a-bd6c-84da678ab37b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "Hy1DfdvzAPV07NgN",
+  "tags": [
+    {
+      "createdAt": "2025-04-29T18:08:11.645Z",
+      "updatedAt": "2025-04-29T18:08:11.645Z",
+      "id": "nd6RHGJa9oL2XRr9",
+      "name": "Financeiro"
+    }
+  ]
+}

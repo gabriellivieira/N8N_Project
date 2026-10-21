@@ -1,0 +1,3229 @@
+{
+  "name": "Jurema_cancelamento_execution_v1",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const motivo = $(\"receber\").first().json.motivo;\nconst user_id = $(\"receber\").first().json.user_id;\nconst conversation_id = $(\"receber\").first().json.conversation_id;\nconst id_registro = $(\"receber\").first().json.id_registro;\n\nconst user = $('Get user').first().json;\nconst properties = user.properties;\n\nconst manager = properties.find(p => p.name === \"managerId\");\nconst broker = properties.find(p => p.name === \"userId\");\n\nconst user_id_brokers = manager?.value || broker?.value || null;\nconst email = user.email || null;\n\nreturn { motivo, user_id, conversation_id, user_id_brokers, id_registro, email };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -7680,
+        1968
+      ],
+      "id": "1f8af058-6c5c-4f0d-90c0-8b0ba35cfd8d",
+      "name": "gather info"
+    },
+    {
+      "parameters": {
+        "url": "=https://eemovel1.freshchat.com/v2/users/{{ $('receber').item.json.user_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -8016,
+        1968
+      ],
+      "id": "388557ff-a7ff-4e07-a1fe-b9e0e6e87090",
+      "name": "Get user"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5262ce23-ae40-4f55-9a26-8590483cefd4",
+              "leftValue": "={{ $('gather info').item.json.user_id_brokers }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -7248,
+        1968
+      ],
+      "id": "b45a41be-a9e0-4485-b94b-02e47414e979",
+      "name": "tem id brokers?"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('get-user-sub').item.json.vigencia }}",
+                    "rightValue": "mensal",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "6aca7033-d5ff-42da-ba99-f7b3b66f8dad"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Mensal"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6fb79cb9-855e-4be7-acb5-95deb99b944a",
+                    "leftValue": "={{ $('get-user-sub').item.json.vigencia }}",
+                    "rightValue": "semestral",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Semestral"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b15f6794-72a2-4318-844e-ac969282ee87",
+                    "leftValue": "={{ $('get-user-sub').item.json.vigencia }}",
+                    "rightValue": "anual",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Anual"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2848,
+        1088
+      ],
+      "id": "aaf8b8e8-c0cf-4ca5-be57-1426a4c8d60f",
+      "name": "mensal/semestral/anual"
+    },
+    {
+      "parameters": {
+        "jsCode": "const grupo_retencao = [\"financeiro\", \"usabilidade\", \"dados\"]\n\nconst motivo = $(\"gather info\").first().json.motivo?.toLowerCase()\n\nconst grupo = grupo_retencao.includes(motivo) ? \"grupo_retencao\" : \"grupo_cancelamento\"\n\nreturn {grupo}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2048,
+        432
+      ],
+      "id": "26302cc1-a77d-4e11-9ace-ef9049d63d08",
+      "name": "retencao/cancelamento"
+    },
+    {
+      "parameters": {
+        "jsCode": "const vigencia_fim = $(\"get-user-sub\").first().json.final // formato: yyyy-mm-dd\n\nconst now = new Date()\nconst fim = new Date(vigencia_fim)\n\nlet classificacao = \"\"\n\nif (now > fim) {\n  classificacao = \"vigencia encerrada\"\n} else {\n  const diffEmMs = fim - now\n  const umMesEmMs = 30 * 24 * 60 * 60 * 1000\n\n  if (diffEmMs <= umMesEmMs) {\n    classificacao = \"falta menos de 1 mês\"\n  } else {\n    classificacao = \"vigencia maior que 1 mês\"\n  }\n}\n\nreturn { classificacao, vigencia_fim }"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2128,
+        1520
+      ],
+      "id": "723ca5cc-aa90-4932-bbf2-cdc4e1fc91ec",
+      "name": "tempo restante"
+    },
+    {
+      "parameters": {
+        "requester": "email",
+        "requesterIdentificationValue": "={{ $('get-user-sub').item.json.email }}",
+        "priority": "medium",
+        "source": "chat",
+        "options": {
+          "description": "=<p>Cliente - {{ $('Get user').item.json.first_name }}</p>\n<p>Número - {{ $('Get user').item.json.phone }}</p>\n<p>Motivo - {{ $('gather info').item.json.motivo }}</p>",
+          "group": 67000579454,
+          "product": 67000001400,
+          "subject": "Retenção mensal - Entrar em contato",
+          "type": "=Churn"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        -80
+      ],
+      "id": "e708ef35-b6d6-4899-b68b-f05e2081625a",
+      "name": "criar ticket - retenção mensal",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "zrrEx4m2XbUEQiU5",
+          "name": "Jurema - Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requesterIdentificationValue": "={{ $('get-user-sub').item.json.email }}",
+        "priority": "medium",
+        "source": "chat",
+        "options": {
+          "description": "=<p>Cliente - {{ $('Get user').item.json.first_name }}</p>\n<p>Número - {{ $('Get user').item.json.phone }}</p>\n<p>Motivo - {{ $('gather info').item.json.motivo }}</p>",
+          "group": 67000579454,
+          "product": 67000001400,
+          "subject": "Cancelamento mensal - Realizar cancelamento",
+          "type": "=Churn"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        448
+      ],
+      "id": "79ded7e0-4e83-45f9-b407-442211687c5c",
+      "name": "criar ticket - cancelamento mensal",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "zrrEx4m2XbUEQiU5",
+          "name": "Jurema - Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Retenção Mensal - Entrar em contato",
+        "type": "Chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "person_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -176
+      ],
+      "id": "b114aa6c-eacc-4e2e-87cf-d7981b84796d",
+      "name": "registrar atividade - retenção mensal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('tempo restante').item.json.classificacao }}",
+                    "rightValue": "vigencia encerrada",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fc4b97f1-b883-45ce-ac19-3401f6301874"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "encerrada"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "515da855-3b27-4dd1-82d5-972c8e35a223",
+                    "leftValue": "={{ $('tempo restante').item.json.classificacao }}",
+                    "rightValue": "falta menos de 1 mês",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "menos que 1 mes"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fe911321-e7ef-4733-9279-03788ae1bcf3",
+                    "leftValue": "={{ $('tempo restante').item.json.classificacao }}",
+                    "rightValue": "vigencia maior que 1 mês",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "maior que 1 mes"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1504,
+        1520
+      ],
+      "id": "f11be8e0-d0f3-41a5-bda2-3ef53fb0d573",
+      "name": "vigencias"
+    },
+    {
+      "parameters": {
+        "jsCode": "const grupo_retencao = [\"financeiro\", \"usabilidade\", \"dados\"]\n\nconst motivo = $(\"gather info\").first().json.motivo?.toLowerCase()\n\nconst grupo = grupo_retencao.includes(motivo) ? \"grupo_retencao\" : \"grupo_cancelamento\"\n\nreturn {grupo}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        1040
+      ],
+      "id": "32951ebc-bbcd-49cf-acb7-4559a91715ac",
+      "name": "retencao/cancelamento - vigencias"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cf15456c-b897-4d23-9202-d17e7ab7be6d",
+                    "leftValue": "={{ $('retencao/cancelamento').item.json.grupo }}",
+                    "rightValue": "grupo_retencao",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "retencao"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cad81808-cca0-49eb-ae19-2d5119eb3466",
+                    "leftValue": "={{ $('retencao/cancelamento').item.json.grupo }}",
+                    "rightValue": "grupo_cancelamento",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelamento"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1520,
+        432
+      ],
+      "id": "140a825e-e2f4-419d-ab02-336b4e7d6b8c",
+      "name": "motivos - mensal"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('gather info').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"Solicitação registrada ✅\\n\\nNosso time vai analisar sua solicitação e entrará em contato pelo WhatsApp para seguir com seu atendimento o mais breve possível\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('gather info').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        288,
+        -80
+      ],
+      "id": "0047c82a-78dc-4362-9f1c-7a34034f56e1",
+      "name": "Mandar msg - retenção mensal"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('gather info').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"Solicitação registrada ✅\\n\\nSeu plano mensal está vigente até {{ formatDate($('get-user-sub').item.final, 'dd/MM/yyyy') }} e será cancelado automaticamente após essa data.\\n\\nCaso receba algum lembrete de cobrança, por favor, desconsidere.\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('gather info').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        288,
+        448
+      ],
+      "id": "6f1f43ba-dc52-44d9-9235-580d315e4d3e",
+      "name": "Mandar msg - cancelamento mensal"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('retencao/cancelamento - vigencias').item.json.grupo }}",
+                    "rightValue": "grupo_retencao",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "64bfc070-df19-4068-a323-3cf48df2a806"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "retencao"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "999cd547-aa79-47f8-ad18-d016176b4d47",
+                    "leftValue": "={{ $('retencao/cancelamento - vigencias').item.json.grupo }}",
+                    "rightValue": "grupo_cancelamento",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelamento"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -896,
+        1040
+      ],
+      "id": "1a02425b-16eb-4812-9c79-ed6107f2afc9",
+      "name": "motivos - anual/semestral"
+    },
+    {
+      "parameters": {
+        "requester": "email",
+        "requesterIdentificationValue": "={{ $('get-user-sub').item.json.email }}",
+        "priority": "medium",
+        "source": "chat",
+        "options": {
+          "description": "=<p>Cliente - {{ $('Get user').item.json.first_name }}</p>\n<p>Número - {{ $('Get user').item.json.phone }}</p>\n<p>Motivo - {{ $('gather info').item.json.motivo }}</p>",
+          "group": 67000579454,
+          "product": 67000001400,
+          "subject": "Retenção Mensal/Anual - Entrar em contato",
+          "type": "=Churn"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        880
+      ],
+      "id": "38653c6a-6957-4f63-95d6-35aded9d4a7c",
+      "name": "criar ticket - retenção anual/semestral",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "zrrEx4m2XbUEQiU5",
+          "name": "Jurema - Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Retenção Anual/Semestral - Entrar em contato",
+        "type": "chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "person_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        768
+      ],
+      "id": "d45cfcba-bcbf-4192-8400-e07184c6ecfa",
+      "name": "registrar atividade - retenção anual/semestral",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('gather info').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"Solicitação registrada ✅\\n\\nNosso time vai analisar sua solicitação e entrará em contato pelo WhatsApp para seguir com seu atendimento o mais breve possível\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('gather info').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        288,
+        880
+      ],
+      "id": "a4acfc14-081e-41a6-96b0-9068da897e40",
+      "name": "Mandar msg - retenção anual/semestral"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"🟢 Cliente em retenção: <b>{{ $('Get user').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        880
+      ],
+      "id": "64ad5c0a-954c-4bf9-8431-7dcbd146c975",
+      "name": "Notificação - retenção anual/semestral",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"🟢 Cliente em retenção: <b>{{ $('Get user').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        608,
+        -80
+      ],
+      "id": "a7ebb433-eefc-445d-92ee-597b47cbef29",
+      "name": "Notificação - retenção mensal",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"❌ Cliente cancelado: <b>{{ $('Get user').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        448
+      ],
+      "id": "af848828-0946-4b03-8715-d3afd81cb6bd",
+      "name": "Notificação - cancelamento mensal",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "requester": "email",
+        "requesterIdentificationValue": "={{ $('get-user-sub').item.json.email }}",
+        "priority": "medium",
+        "source": "chat",
+        "options": {
+          "description": "=<p>Cliente - {{ $('Get user').item.json.first_name }}</p>\n<p>Número - {{ $('Get user').item.json.phone }}</p>\n<p>Motivo - {{ $('gather info').item.json.motivo }}</p>",
+          "group": 67000579454,
+          "product": 67000001400,
+          "subject": "Cancelamento semestral/anual - Realizar cancelamento",
+          "type": "=Churn"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        1280
+      ],
+      "id": "3ab789ae-eab3-4252-b6de-6c0629aa3ece",
+      "name": "criar ticket - cancelamento anual/semestral",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "zrrEx4m2XbUEQiU5",
+          "name": "Jurema - Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cancelamento semestral/anual - Realizar cancelamento",
+        "type": "chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "person_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1152
+      ],
+      "id": "8b5ffdad-f993-4da0-9120-43152cc5095a",
+      "name": "registrar atividade - cancelamento anual/semestral",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('gather info').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"Solicitação registrada ✅\\n\\nSeu plano está vigente até {{ formatDate($('get-user-sub').item.final, 'dd/MM/yyyy') }} e será cancelado automaticamente após essa data.\\n\\nCaso receba algum lembrete de cobrança, por favor, desconsidere.\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('gather info').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        288,
+        1280
+      ],
+      "id": "59782e04-9550-479b-9a9e-688abc1b1536",
+      "name": "Mandar msg - cancelamento anual/semestral"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"❌ Cliente cancelado: <b>{{ $('Get user').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        1280
+      ],
+      "id": "3ad0693a-f9fb-4a5b-9e16-ed612a8f06f3",
+      "name": "Notificação - cancelamento anual/semestral",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "requester": "email",
+        "requesterIdentificationValue": "={{ $('get-user-sub').item.json.email }}",
+        "priority": "medium",
+        "source": "chat",
+        "options": {
+          "description": "=<p>Cliente - {{ $('Get user').item.json.first_name }}</p>\n<p>Número - {{ $('Get user').item.json.phone }}</p>\n<p>Motivo - {{ $('gather info').item.json.motivo }}</p>",
+          "group": 67000579454,
+          "product": 67000001400,
+          "subject": "Cancelamento semestral/anual - Realizar estorno e cancelamento",
+          "type": "=Churn"
+        }
+      },
+      "type": "n8n-nodes-base.freshdesk",
+      "typeVersion": 1,
+      "position": [
+        -864,
+        1904
+      ],
+      "id": "b74545e0-f652-4310-b447-c4f3ec9544c9",
+      "name": "criar ticket - estorno anual/semestral",
+      "credentials": {
+        "freshdeskApi": {
+          "id": "zrrEx4m2XbUEQiU5",
+          "name": "Jurema - Gabi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cancelamento semestral/anual - Realizar estorno e cancelamento",
+        "type": "chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "person_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        1792
+      ],
+      "id": "fe53137f-deb1-4932-a766-d0f42687c65b",
+      "name": "registrar atividade - cancelamento e estorno anual/semestral",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('gather info').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"Solicitação registrada ✅\\n\\nNosso time vai analisar sua solicitação e entrará em contato pelo WhatsApp para seguir com seu atendimento o mais breve possível\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('gather info').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        288,
+        1904
+      ],
+      "id": "f5083bc4-bf4b-42dd-a3b7-b41f0ed6c977",
+      "name": "Mandar msg - cancelamento/estorno anual/semestral"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"❌ Cliente cancelado: <b>{{ $('Get user').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        608,
+        1904
+      ],
+      "id": "61b4072d-fbb2-48a3-9da1-92fe74d05663",
+      "name": "Notificação - cancelamento e estorno anual/semestral",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('gather info').item.json.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \n\t\"status\": \"new\",\n\t\"assigned_group_id\": \"e2e2112e-9f39-4cb5-8887-090c97f933a6\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -5936,
+        2560
+      ],
+      "id": "b94e0174-9f05-4341-870a-6d35627a26ec",
+      "name": "update conversa - new"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "metricas_suporte",
+          "mode": "list",
+          "cachedResultName": "metricas_suporte"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "created_at": "={{ $now }}",
+            "conversation_id": "={{ $('gather info').item.json.conversation_id }}",
+            "status": "Não resolvido"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -5648,
+        2560
+      ],
+      "id": "b38d39c7-fc2e-4a9b-8fe0-11dfec896c69",
+      "name": "inserir - não resolvido",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": true,
+            "fora_escopo": true,
+            "id": "={{ $('gather info').item.json.id_registro }} "
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -5360,
+        2560
+      ],
+      "id": "cf56d092-3e16-4b6d-bb08-f277f8537a2e",
+      "name": "resolver - interação fora escopo",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "metricas_suporte",
+          "mode": "list",
+          "cachedResultName": "metricas_suporte"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "created_at": "={{ $now }}",
+            "conversation_id": "={{ $('gather info').item.json.conversation_id }}",
+            "status": "Resolvido"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2000,
+        928
+      ],
+      "id": "1a8fc50c-fe99-42f4-b637-a00d4544ac30",
+      "name": "Inserir - Resolvida",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": true,
+            "id": "={{ $('gather info').item.json.id_registro }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2304,
+        928
+      ],
+      "id": "48e490c6-6cd2-4bd0-b79d-7dba55a5a9db",
+      "name": "resolver - id interação",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Cliente não tem ID Brokers\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('Get user').item.json.first_name }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('Get user').item.json.email[0] || \"Sem e-mail\" }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Número\",\n                \"content\": \"{{ $('Get user').item.json.phone }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -6240,
+        2560
+      ],
+      "id": "0e4f92ed-e8f5-4a45-8407-197228b56c0e",
+      "name": "mensagem erro - suporte1"
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "search",
+        "term": "={{ $('gather info').item.json.email }}",
+        "additionalFields": {
+          "exactMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -6768,
+        1312
+      ],
+      "id": "59e3f866-770e-480d-815f-f6e891d05487",
+      "name": "1tentativa",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a7984b0d-afbb-42ce-9c1a-c601a9401478",
+              "leftValue": "={{ $('1tentativa').last().json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -6528,
+        1312
+      ],
+      "id": "b1d4a1e1-2e21-4b83-9255-24591adb6cb4",
+      "name": "tem info pessoa?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a725db37-553e-497c-9a79-842898b08e3c",
+              "leftValue": "={{ $('gather info').item.json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -7008,
+        1632
+      ],
+      "id": "e41d3545-85f4-4e29-806e-a4e0e9a97f8f",
+      "name": "Tem e-mail?"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "term": "={{ $('gather info').last().json.user_id }}",
+        "exactMatch": true,
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -6368,
+        1488
+      ],
+      "id": "630a0b9f-db76-408d-9f91-28e7a7372012",
+      "name": "deal",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "681fb7e4-3d22-4b8c-b282-630d5a2dbcc1",
+              "leftValue": "={{ $('deal').last().json.item.person }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -6208,
+        1488
+      ],
+      "id": "04a2e536-3370-413f-a174-2d27972ad25c",
+      "name": "tem pessoa?"
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "get",
+        "personId": "={{ $('deal').last().json.item.person.id }}",
+        "resolveProperties": true
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -6000,
+        1344
+      ],
+      "id": "663d4567-8548-447c-abc9-ad1907c8541a",
+      "name": "person",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let data = $(\"1tentativa\").last().json;\n\nlet crm_type = \"person\"\nlet crm_type_id = data.id\n\nreturn { crm_type, crm_type_id };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6368,
+        1088
+      ],
+      "id": "19ba5cab-b045-4522-b660-1f396a5a5e95",
+      "name": "formatação person"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data = $(\"person\").last().json;\n\nlet crm_type = \"person\"\nlet crm_type_id = data.ID\n\nreturn { crm_type, crm_type_id };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5776,
+        1344
+      ],
+      "id": "2673c3e4-19fe-483d-90e8-aaf430a99272",
+      "name": "formatação deal/person"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "crm_type"
+            },
+            {
+              "fieldToAggregate": "crm_type_id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -4960,
+        1088
+      ],
+      "id": "53656507-df4f-403d-a83d-10d79e93c5fd",
+      "name": "info_crm"
+    },
+    {
+      "parameters": {
+        "resource": "organization",
+        "operation": "get",
+        "organizationId": "={{ $('deal').last().json.item.organization.id }}",
+        "resolveProperties": true
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -6000,
+        1584
+      ],
+      "id": "469664d6-b7a5-4146-b5ee-c03144733cb5",
+      "name": "organization",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f7f6fa7c-4219-4108-a26b-f219ec053555",
+              "leftValue": "={{ $('organization').last().json.last_activity.person_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -5776,
+        1584
+      ],
+      "id": "62388bad-995c-48d4-ad91-ea7b9f1201ba",
+      "name": "person_id (duplo negativo)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $('organization').last().json\n\nconst crm_type = \"organization\"\nconst crm_type_id = data.id\n\nreturn {crm_type, crm_type_id}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5504,
+        1488
+      ],
+      "id": "d7969097-c1d2-494c-9284-b26021d5befa",
+      "name": "formatação organization"
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "get",
+        "personId": "={{ $('organization').last().json.last_activity.person_id }}"
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -5504,
+        1680
+      ],
+      "id": "b98739d7-2b44-472c-9158-4cbe11f2d6ee",
+      "name": "person_last",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let data = $(\"person_last\").last().json;\n\nlet crm_type = \"person\"\nlet crm_type_id = data.ID\n\nreturn { crm_type, crm_type_id };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5184,
+        1680
+      ],
+      "id": "1f25e7cd-e8e5-486b-b195-cc3406ba383a",
+      "name": "formatação deal/org/person"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first() }}",
+                    "rightValue": "person",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fc4dec8b-77fc-441f-a0b8-0626b77f1887"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "person"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f6191cc1-21fd-408d-88e0-b24d647881b9",
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first() }}",
+                    "rightValue": "organization",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "organization"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -576,
+        -80
+      ],
+      "id": "f1934c10-78d2-4148-a526-8760ee340585",
+      "name": "person/org"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Retenção Mensal - Entrar em contato",
+        "type": "Chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "org_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        32
+      ],
+      "id": "0e5c9581-86c4-46cd-9ae4-b48e8432bf69",
+      "name": "registrar atividade - retenção mensal1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first() }}",
+                    "rightValue": "person",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fc4dec8b-77fc-441f-a0b8-0626b77f1887"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "person"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f6191cc1-21fd-408d-88e0-b24d647881b9",
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first() }}",
+                    "rightValue": "organization",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "organization"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -608,
+        448
+      ],
+      "id": "a84c28c3-c134-4d55-bdf8-a402a383a179",
+      "name": "person/org1"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cancelamento Mensal - Realizar",
+        "type": "chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "person_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        320
+      ],
+      "id": "54c65d7c-bba1-4bf3-ab0f-96c925bead3e",
+      "name": "registrar atividade - cancelamento mensal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cancelamento Mensal - Realizar",
+        "type": "chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "org_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        528
+      ],
+      "id": "21bacdb8-01b3-4c4e-b757-d7f997e3f738",
+      "name": "registrar atividade - cancelamento mensal1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first()}}",
+                    "rightValue": "person",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fc4dec8b-77fc-441f-a0b8-0626b77f1887"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "person"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f6191cc1-21fd-408d-88e0-b24d647881b9",
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first()}}",
+                    "rightValue": "organization",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "organization"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -256,
+        880
+      ],
+      "id": "b8d8aa30-9b24-42a6-a0f4-ebe0631ce42e",
+      "name": "person/org2"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Retenção semestral/anual - Entrar em contato",
+        "type": "chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "org_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        944
+      ],
+      "id": "12c01573-d091-43fe-ad54-6f38fbc0472f",
+      "name": "registrar atividade - retenção anual/semestral1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first()}}",
+                    "rightValue": "person",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fc4dec8b-77fc-441f-a0b8-0626b77f1887"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "person"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f6191cc1-21fd-408d-88e0-b24d647881b9",
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first()}}",
+                    "rightValue": "organization",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "organization"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -256,
+        1280
+      ],
+      "id": "711f9a90-3475-43ee-9b14-7aab6258de5b",
+      "name": "person/org3"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cancelamento semestral/anual - Realizar cancelamento",
+        "type": "chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "org_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1360
+      ],
+      "id": "11121d65-5e2d-4a46-b7da-cd5f4833d2b2",
+      "name": "registrar atividade - cancelamento anual/semestral1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first() }}",
+                    "rightValue": "person",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fc4dec8b-77fc-441f-a0b8-0626b77f1887"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "person"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f6191cc1-21fd-408d-88e0-b24d647881b9",
+                    "leftValue": "={{ $('info_crm').item.json.crm_type.first() }}",
+                    "rightValue": "organization",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "organization"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -608,
+        1904
+      ],
+      "id": "29193982-9fd5-428e-ba3a-d4be6bdf5ea5",
+      "name": "person/org4"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cancelamento semestral/anual - Realizar estorno e cancelamento",
+        "type": "chat",
+        "additionalFields": {
+          "note": "=Cliente - {{ $('Get user').item.json.first_name }}\nnúmero - {{ $('Get user').item.json.phone }}\nmotivo - {{ $('gather info').item.json.motivo }}",
+          "org_id": "={{ $('info_crm').item.json.crm_type_id.first() }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        2000
+      ],
+      "id": "768cd967-2af3-4be9-a5db-b120bd8b9156",
+      "name": "registrar atividade - cancelamento e estorno anual/semestral1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  pbu.manager_id\nfrom\n\tanalytics_v2.platform_brokers_user_subscription pbus\nleft join\n\tanalytics_v2.platform_brokers_user pbu on pbus.id = pbu.id\nwhere\n  pbus.id = {{ $('gather info').item.json.user_id_brokers }}\n  and pbu.manager_id is not null\nlimit 1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4624,
+        1088
+      ],
+      "id": "79192e2b-b4ab-475c-b5aa-6ba8fbaa566f",
+      "name": "get manager",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "26544606-4665-4dd6-afb5-2a319e3e2971",
+              "leftValue": "={{ $('get manager').item.json.manager_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -4288,
+        1088
+      ],
+      "id": "8ccc6ce5-7f2f-407b-9457-e235d6ae54d3",
+      "name": "tem manager?"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n\tpbus.id as id_brokers,\n\tpbu.email as email,\n\tibs.expires_at as final,\n\tibs.subscription_id as iugu_id_sub,\n\tibs.plan_name as nome_plano,\n\tcase\n\t\twhen lower(ibs.plan_identifier) like '%anual%' then 'anual'\n\t\twhen lower(ibs.plan_identifier) like '%semestral%' then 'semestral'\n\t\twhen lower(ibs.plan_identifier) like '%mensal%' then 'mensal'\n\t\telse 'mensal'\n\tend as vigencia\nfrom\n\tanalytics_v2.platform_brokers_user_subscription pbus\nleft join\n\tanalytics_v2.platform_brokers_user pbu on pbus.id = pbu.id\nleft join\n\tanalytics_v2.iugu_brokers_subscriptions ibs on pbu.email = ibs.customer_email\nwhere \n\tpbus.id = {{ $('get manager').item.json.manager_id }}\n\tand ibs.active = 't'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3776,
+        992
+      ],
+      "id": "bfe010b6-835e-421c-b0cc-f9d482b9c772",
+      "name": "get-manager-sub",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n\tpbus.id as id_brokers,\n\tpbu.email as email,\n\tibs.expires_at as final,\n\tibs.subscription_id as iugu_id_sub,\n\tibs.plan_name as nome_plano,\n\tcase\n\t\twhen lower(ibs.plan_identifier) like '%anual%' then 'anual'\n\t\twhen lower(ibs.plan_identifier) like '%semestral%' then 'semestral'\n\t\twhen lower(ibs.plan_identifier) like '%mensal%' then 'mensal'\n\t\telse 'mensal'\n\tend as vigencia\nfrom\n\tanalytics_v2.platform_brokers_user_subscription pbus\nleft join\n\tanalytics_v2.platform_brokers_user pbu on pbus.id = pbu.id\nleft join\n\tanalytics_v2.iugu_brokers_subscriptions ibs on pbu.email = ibs.customer_email\nwhere \n\tpbus.id = {{ $('gather info').item.json.user_id_brokers }}\n\tand ibs.active = 't'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3776,
+        1184
+      ],
+      "id": "abe028c3-7cf3-48bc-9700-8f1e1948e191",
+      "name": "get-user-sub1",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -3264,
+        1088
+      ],
+      "id": "accbade4-34b0-4171-b9b4-54c3276a5cdb",
+      "name": "get-user-sub"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('gather info').item.json.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \n\t\"status\": \"resolved\",\n    \"assigned_agent_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2592,
+        928
+      ],
+      "id": "0526d374-16a3-4300-9f42-04a27696d843",
+      "name": "Update conversa - Resolvida"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"🟢 Finalizado: <b>{{ $('Get user').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2848,
+        928
+      ],
+      "id": "90c5f6b2-0500-44ef-bb8f-d654a3834e4d",
+      "name": "Envia finalizado",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "465f1f16-6cd5-4ee5-931c-2a97ce26e4fa",
+      "typeVersion": 1.1,
+      "name": "receber",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -8368,
+        1968
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "gather info": {
+      "main": [
+        [
+          {
+            "node": "tem id brokers?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user": {
+      "main": [
+        [
+          {
+            "node": "gather info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem id brokers?": {
+      "main": [
+        [
+          {
+            "node": "Tem e-mail?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensal/semestral/anual": {
+      "main": [
+        [
+          {
+            "node": "retencao/cancelamento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "tempo restante",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "tempo restante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "retencao/cancelamento": {
+      "main": [
+        [
+          {
+            "node": "motivos - mensal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tempo restante": {
+      "main": [
+        [
+          {
+            "node": "vigencias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar ticket - retenção mensal": {
+      "main": [
+        [
+          {
+            "node": "person/org",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar ticket - cancelamento mensal": {
+      "main": [
+        [
+          {
+            "node": "person/org1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - retenção mensal": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - retenção mensal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "vigencias": {
+      "main": [
+        [
+          {
+            "node": "retencao/cancelamento - vigencias",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "retencao/cancelamento - vigencias",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "criar ticket - estorno anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "retencao/cancelamento - vigencias": {
+      "main": [
+        [
+          {
+            "node": "motivos - anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "motivos - mensal": {
+      "main": [
+        [
+          {
+            "node": "criar ticket - retenção mensal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "criar ticket - cancelamento mensal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mandar msg - retenção mensal": {
+      "main": [
+        [
+          {
+            "node": "Notificação - retenção mensal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mandar msg - cancelamento mensal": {
+      "main": [
+        [
+          {
+            "node": "Notificação - cancelamento mensal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "motivos - anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "criar ticket - retenção anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "criar ticket - cancelamento anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar ticket - retenção anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "person/org2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - retenção anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - retenção anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mandar msg - retenção anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Notificação - retenção anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificação - retenção anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Inserir - Resolvida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificação - retenção mensal": {
+      "main": [
+        [
+          {
+            "node": "Inserir - Resolvida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificação - cancelamento mensal": {
+      "main": [
+        [
+          {
+            "node": "Inserir - Resolvida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar ticket - cancelamento anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "person/org3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - cancelamento anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - cancelamento anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mandar msg - cancelamento anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Notificação - cancelamento anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificação - cancelamento anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Inserir - Resolvida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar ticket - estorno anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "person/org4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - cancelamento e estorno anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - cancelamento/estorno anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mandar msg - cancelamento/estorno anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Notificação - cancelamento e estorno anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificação - cancelamento e estorno anual/semestral": {
+      "main": [
+        [
+          {
+            "node": "Inserir - Resolvida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update conversa - new": {
+      "main": [
+        [
+          {
+            "node": "inserir - não resolvido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inserir - não resolvido": {
+      "main": [
+        [
+          {
+            "node": "resolver - interação fora escopo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inserir - Resolvida": {
+      "main": [
+        [
+          {
+            "node": "resolver - id interação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resolver - id interação": {
+      "main": [
+        [
+          {
+            "node": "Update conversa - Resolvida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem erro - suporte1": {
+      "main": [
+        [
+          {
+            "node": "update conversa - new",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1tentativa": {
+      "main": [
+        [
+          {
+            "node": "tem info pessoa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem info pessoa?": {
+      "main": [
+        [
+          {
+            "node": "formatação person",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tem e-mail?": {
+      "main": [
+        [
+          {
+            "node": "1tentativa",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deal": {
+      "main": [
+        [
+          {
+            "node": "tem pessoa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem pessoa?": {
+      "main": [
+        [
+          {
+            "node": "person",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "organization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person": {
+      "main": [
+        [
+          {
+            "node": "formatação deal/person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação person": {
+      "main": [
+        [
+          {
+            "node": "info_crm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação deal/person": {
+      "main": [
+        [
+          {
+            "node": "info_crm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_crm": {
+      "main": [
+        [
+          {
+            "node": "get manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "organization": {
+      "main": [
+        [
+          {
+            "node": "person_id (duplo negativo)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person_id (duplo negativo)": {
+      "main": [
+        [
+          {
+            "node": "formatação organization",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "person_last",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação organization": {
+      "main": [
+        [
+          {
+            "node": "info_crm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person_last": {
+      "main": [
+        [
+          {
+            "node": "formatação deal/org/person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatação deal/org/person": {
+      "main": [
+        [
+          {
+            "node": "info_crm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person/org": {
+      "main": [
+        [
+          {
+            "node": "registrar atividade - retenção mensal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "registrar atividade - retenção mensal1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - retenção mensal1": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - retenção mensal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person/org1": {
+      "main": [
+        [
+          {
+            "node": "registrar atividade - cancelamento mensal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "registrar atividade - cancelamento mensal1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - cancelamento mensal": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - cancelamento mensal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - cancelamento mensal1": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - cancelamento mensal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person/org2": {
+      "main": [
+        [
+          {
+            "node": "registrar atividade - retenção anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "registrar atividade - retenção anual/semestral1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - retenção anual/semestral1": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - retenção anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person/org3": {
+      "main": [
+        [
+          {
+            "node": "registrar atividade - cancelamento anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "registrar atividade - cancelamento anual/semestral1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - cancelamento anual/semestral1": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - cancelamento anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "person/org4": {
+      "main": [
+        [
+          {
+            "node": "registrar atividade - cancelamento e estorno anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "registrar atividade - cancelamento e estorno anual/semestral1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar atividade - cancelamento e estorno anual/semestral1": {
+      "main": [
+        [
+          {
+            "node": "Mandar msg - cancelamento/estorno anual/semestral",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get manager": {
+      "main": [
+        [
+          {
+            "node": "tem manager?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tem manager?": {
+      "main": [
+        [
+          {
+            "node": "get-manager-sub",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "get-user-sub1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-manager-sub": {
+      "main": [
+        [
+          {
+            "node": "get-user-sub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-user-sub1": {
+      "main": [
+        [
+          {
+            "node": "get-user-sub",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "get-user-sub": {
+      "main": [
+        [
+          {
+            "node": "mensal/semestral/anual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update conversa - Resolvida": {
+      "main": [
+        [
+          {
+            "node": "Envia finalizado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "receber": {
+      "main": [
+        [
+          {
+            "node": "Get user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "aab78ca4-eca0-4b34-b006-ad813751b2ea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "pwVOWOfdW0SJtC9r",
+  "tags": [
+    {
+      "createdAt": "2025-05-05T21:01:26.829Z",
+      "updatedAt": "2025-05-05T21:01:26.829Z",
+      "id": "poPYlNDz1nhN1f3Q",
+      "name": "JUREMA_PROD"
+    }
+  ]
+}

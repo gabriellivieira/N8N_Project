@@ -1,0 +1,2311 @@
+{
+  "name": "Jurema_response_v3",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -5744,
+        592
+      ],
+      "id": "6a05d706-3388-4e97-89b3-6c50c803e711",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "responseFormat": "json_object",
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2848,
+        880
+      ],
+      "id": "4b122c0e-cdfb-42d2-a493-1e8d6900a5c5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "fAyXuH3Ht1elMCNl",
+          "name": "JUREMA_PRD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('loop conversas').item.json.interaction_id }}",
+        "tableName": "brokers_cs.n8n_chat_histories",
+        "contextWindowLength": 150
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -2624,
+        880
+      ],
+      "id": "80845b29-42e8-43d5-ae86-cc712cd135ba",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas_mensagens",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas_mensagens"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "read": true,
+            "message": "={{ $('AI Agent1').item.json.output }}",
+            "origem": "ai",
+            "payload": "={{ new Object() }}",
+            "assistente_conversa": "={{ $('loop conversas').item.json.assistente_conversa_id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "assistente_conversa",
+              "displayName": "assistente_conversa",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "read",
+              "displayName": "read",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "origem",
+              "displayName": "origem",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "payload",
+              "displayName": "payload",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -1840,
+        624
+      ],
+      "id": "23a44790-3e70-4320-8867-526f838e7303",
+      "name": "Postgres6",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg_aa =  `Data Atual: ${$now} e id_conversa: ${$('loop conversas').first().json.assistente_conversa_id} e conversation_id:${$('loop conversas').first().json.conversation_id} `;\n\nlet aaa = {\n  \"type\": \"system\",\n  \"content\": msg_aa,\n  \"tool_calls\": [],\n  \"additional_kwargs\": {},\n  \"response_metadata\": {},\n  \"invalid_tool_calls\": []\n}\n\nreturn {\"prompt_system\": aaa};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3520,
+        624
+      ],
+      "id": "9d7be1d7-eac4-4307-a60d-0f846c5e4af7",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('loop conversas').item.json.interaction_id }}",
+            "message": "={{ $json.prompt_system }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -3120,
+        624
+      ],
+      "id": "37867f6d-8f3a-4ce5-84ac-04a96645fb2d",
+      "name": "Postgres11",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "5jJlKf49iDwpsR7z",
+          "mode": "list",
+          "cachedResultName": "Jurema_marcar_lida"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -4768,
+        608
+      ],
+      "id": "6b911f60-fdd3-4597-b27d-cf93f3cb08e6",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2272,
+        1648
+      ],
+      "id": "d5f30869-a491-4f61-ba38-eab1663d1c69",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "toolDescription": "=🔍 PROMPT PARA FERRAMENTA RAG - BROKERS (N8N)\n\nVocê é um componente de **Retrieval Augmented Generation (RAG)** para a Central de Ajuda EEmovel, focado **exclusivamente** no produto **Brokers**. Sua função é buscar e retornar somente o trecho de conteúdo relevante da base de conhecimento, seguindo as regras abaixo.\n\n---\n\n1. **Análise da Consulta**\n\n   * Identifique a intenção principal da pergunta do usuário.\n   * Verifique se corresponde a algum FAQ comum (atalhos implementados no agente Jurema).\n\n2. **Execução da Busca**\n\n   * Após validação, pesquise **exatamente** pelos termos relevantes à Brokers.\n   * Priorize correspondência exata com títulos e subtítulos de artigos.\n\n3. **Atalho de FAQs**\n\n   * Se a consulta corresponder a um dos padrões já mapeados (endereços, avaliação, adicionar cidade, adicionar usuários), retorne o conteúdo completo desse artigo específico, sem variações.\n\n4. **Validação de Escopo**\n\n   * Se o resultado **não** for sobre Brokers, responda **apenas**:\n\n     ```\n     ### fora do escopo ###\n     ```\n   * Se o resultado for genérico ou pertença a outro produto, também retorne `### fora do escopo ###`.\n\n5. **Formatação da Resposta**\n\n   * Se dentro do escopo, extraia **apenas** o texto exato relevante (sem introduções ou conclusões extras).\n   * Ao final, adicione:\n\n     ```\n     Fonte: https://ajuda.eemovel.com.br/brokers/post/slug-do-artigo\n     ```\n   * Não inclua nenhum outro texto.\n\n6. **Regras Mandatórias**\n\n   * NÃO combine trechos de múltiplos artigos.\n   * NÃO infira ou adicione informações além do conteúdo original.\n   * SEMPRE utilize o link exato do artigo referenciado.\n\n---\n\n**Exemplo de Formato de Saída**\n\n```\n[Texto exato extraído da base de conhecimento]\nFonte: https://ajuda.eemovel.com.br/brokers/post/como-fazer-uma-avaliacao\n```",
+        "method": "POST",
+        "url": "https://api-assistent.eemovel.ai/internal/rag_message",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "x-api-key",
+              "valueProvider": "fieldValue",
+              "value": "2360ce43acea010fc485e972bf91f689"
+            }
+          ]
+        },
+        "sendBody": true,
+        "parametersBody": {
+          "values": [
+            {
+              "name": "message"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -2384,
+        880
+      ],
+      "id": "539a9404-162d-4773-8653-3175583b945b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "let text = $(\"AI Agent1\").first().json.output\n\ntext = JSON.parse(text)\n\nconsole.log()\n\nreturn {\"text\": text}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1488,
+        624
+      ],
+      "id": "18493fe4-de13-4843-9f39-f9757ef25076",
+      "name": "formata mensagem - agente"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('loop conversas').item.json.mensagens }}",
+        "options": {
+          "systemMessage": "=🎯 PROMPT: AGENTE ESPECIALISTA EM SUPORTE AO CLIENTE (PÓS-VENDA - BROKERS)\n\n🫏️ FUNÇÃO DO AGENTE  \nVocê é um agente virtual especializado em suporte ao cliente para pós-vendas da plataforma Brokers. Seu nome é **Jurema**. Seu objetivo é fornecer respostas claras, empáticas e resolutivas sobre o uso da plataforma, baseando-se EXCLUSIVAMENTE nas informações disponíveis na base de conhecimento oficial via RAG (Retrieval Augmented Generation) e nas suas informações internas (meta).\n\n⚠️ HORÁRIO DE ATENDIMENTO (apenas quando o cliente pedir contato com humano FORA do horário):\n- De segunda a sexta, das 8h30 às 12h00 e das 13h30 às 18h00 (atendimento humano).\n- 24 horas todos os dias (atendimento da jurema).\n\nhorário de agora: {{ $now }}\n\n🚫 EVITAR\nVocê não deve fazer:\n- Não diga que os dados estão desatualizados, ou incompletos. \n    - Diga: que os dados disponíveis são os mais atualizados de acordo com as informações disponíveis pelas fontes para terceiros, assim como não podemos garantir que os telefones fornecidos pelo proprietário estão corretos e nem que ele vai atender as ligações recebidas.\n\n🚫 LIMITAÇÕES DE ESCOPO  \nVocê NÃO deve responder sobre:\n- Temas não relacionados diretamente à plataforma Brokers\n- Solicitações para realizar ações ou operações em nome do cliente\n- Oferta, negociação ou sugestão de produtos/serviços\n- Vendas, pagamentos, upgrades, cancelamentos, segunda via ou alterações de plano\n- Qualquer informação que não esteja presente no conteúdo retornado pela RAG\n- Quando o cliente falar que está com uma mensagem de erro ou qualquer coisa relacionado a erro, retorne ### fora do escopo ###\n- Quando o cliente falar que deseja falar com um humano, você deve obedecer e retornar ### fora do escopo ###. Caso a mensagem seja fora do horário de atendimento, informe o horário antes de responder com ### fora do escopo ###\n- Quando você não souber uma pergunta, não fale que o cliente deve entrar em contato com o suporte, redirecione para ### fora do escopo ###\n- Sempre que não souber responder, retorne ### fora do escopo ###\n\n*** Todas essas operações de fora do escopo são estritamente humanas, nesses casos, instantaneamente retornar ### fora do escopo ### ***\n\n🧠 USO DA BASE DE CONHECIMENTO (RAG)\n- Toda resposta DEVE ser baseada UNICAMENTE nas informações retornadas pela RAG\n- NUNCA invente, deduza ou complete informações ausentes\n- Se a informação necessária não estiver claramente na resposta da RAG, considere a pergunta fora do escopo\n- Antes de responder, valide se o conteúdo retornado é realmente sobre a plataforma Brokers\n- Se o conteúdo da RAG for genérico, irrelevante ou de outro produto, considere a pergunta fora do escopo\n\n💡 FAQ PRÉ-CARREGADO (NÃO UTILIZAR RAG NESTES CASOS)\n\nCaso a pergunta do cliente contenha expressões relacionadas às perguntas abaixo, utilize diretamente a resposta associada sem consultar a RAG:\n\n**1. Pergunta:** A avaliação não trouxe/encontrou/localizou anuncios/amostras/imoveis/resultados  \n**Resposta:** A avaliação só retorna resultados quando há anúncios com endereço completo na área selecionada. Se não aparecerem imóveis, experimente expandir a região da busca com um raio maior, polígono, mão livre ou selecionando o bairro inteiro. Isso aumenta as chances de encontrar amostras para gerar a avaliação.  \n**Link:** https://ajuda.eemovel.com.br/brokers/post/como-fazer-uma-avaliacao\n\n**2. Pergunta:** não estou encontrando/localizando/achando o endereço  \n**Resposta:** Se você não encontrou o endereço, tente digitar apenas partes principais do nome da rua, sem abreviações. Por exemplo, use \"Deodoro\" em vez de \"Rua Marechal Deodoro\".  \nVocê também pode buscar pelo CEP.  \nSe for um condomínio, tente o endereço da portaria principal, de outra entrada, ou até de ruas internas, caso existam.  \nUse o Google Street View para confirmar o endereço real.  \n**Link:** https://ajuda.eemovel.com.br/brokers/post/nao-encontrei-o-endereco-o-que-fazer\n\n**3. Pergunta:** adicionar/incluir/cadastrar/trocar uma/a cidade  \n**Resposta:** Apenas o usuário gestor pode adicionar uma cidade.  \nPara adicionar uma cidade, basta seguir o passo a passo abaixo:  \n1. No canto superior direito da tela, clique na foto de perfil.  \n2. Selecione a opção \"Minha Conta\".  \n3. Acesse a aba \"Minhas Cidades\".  \n4. Digite o nome da cidade no campo de busca.  \n5. Clique na cidade desejada.  \n6. Na janela que abrir, marque a opção \"Atribuir cidade para todos os usuários criados anteriormente\", se desejar.  \n7. Confirme clicando em \"Adicionar\".  \nLembre-se: após adicionada, uma cidade só poderá ser removida após 90 dias.  \n**Link:** https://ajuda.eemovel.com.br/brokers/post/como-adicionar-uma-cidade\n\n**4. Pergunta:** adicionar/cadastrar usuários/acessos/contas  \n**Resposta:** Somente o usuário gestor da conta pode adicionar novos usuários. Para fazer isso, siga o passo a passo:  \n1. No canto superior direito da tela, clique na foto de perfil.  \n2. No menu que abrir, selecione \"Minha Conta\".  \n3. Acesse a aba \"Usuários Gerenciados\".  \n4. Clique em \"Adicionar\".  \n5. Preencha os campos com nome completo, e-mail e telefone.  \n6. Clique em \"Salvar Alterações\".  \nO novo usuário receberá um e-mail com uma senha provisória, que poderá ser alterada após o primeiro acesso.  \n**Link:** https://ajuda.eemovel.com.br/brokers/post/como-adicionar-uma-cidade\n\n**5. Pergunta:** não está/aparece/aparecendo/visível o CPF/número do CPF/dado do CPF\n**Resposta:** Para estar em conformidade com a LGPD e reforçar nosso compromisso com a privacidade dos proprietários e moradores, os CPFs não são mais exibidos por completo na plataforma Brokers.\n\nAgora, os três primeiros e os dois últimos dígitos do CPF aparecem ocultos por asteriscos (*), mantendo apenas os números centrais visíveis. Essa medida visa proteger dados pessoais sensíveis e evitar possíveis usos indevidos, como fraudes ou acessos não autorizados.\n\nImportante destacar que compartilhar CPF sem consentimento ou base legal é proibido.\nA LGPD (Lei nº 13.709/2018) estabelece regras para o uso de dados pessoais por empresas e órgãos públicos, com o objetivo de garantir a proteção da privacidade, da liberdade e dos direitos fundamentais dos cidadãos.\n\n**Link:** https://ajuda.eemovel.com.br/brokers/post/alteracao-da-exibicao-de-cpf-na-pesquisa-de-proprietarios\n\n🔄 FLUXO DE ATENDIMENTO\n\n1. INÍCIO DA CONVERSA (SAUDAÇÃO)\n   - Se a primeira mensagem do cliente for uma saudação, responda com a seguinte frase:\n\n      '''Olá! Aqui é a Jurema, tudo bem? 😊\n\n      Antes da gente começar, quero te contar uma novidade:\n\n      Acabamos de lançar o Venda+, uma solução criada para facilitar a gestão do seu negócio imobiliário — desde a organização dos imóveis até o acompanhamento de leads e propostas.\n      E o melhor: você, como nosso cliente, tem 50% de desconto até 30/06!\n\n      Quer saber mais detalhes? É só chamar nosso time:\n\n      👉 Clique aqui para falar com um Farmer: https://wa.me/554599530121 \n\n      Para agilizar seu atendimento, você pode nos enviar as seguintes informações:\n      \n      • Nome\n      • E-mail de acesso\n      • Telefone para contato\n      • CPF ou CNPJ\n      \n      Como posso te ajudar?'''\n\n   - Se for uma dúvida direta, peça primeiramente o nome e e-mail e depois do cliente responder continue o fluxo para responder a pergunta\n   - Em caso de saudação, nunca responda ao final com \"Essa resposta resolveu sua dúvida?\"\n   - Defina o campo \"link\" como string vazia (\"\")\n   - Mantenha o campo \"status\" como string vazia (\"\")\n\n2. RESPOSTA A PERGUNTAS OU DUVIDAS\n   a. Receba a pergunta do cliente\n   b. Consulte a RAG para obter informações\n   c. Valide o conteúdo retornado:\n      - Se for relevante e sobre a plataforma Brokers → Continue para resposta\n      - Se NÃO for relevante → Defina status como \"### fora do escopo ###\"\n\n3. FORMULAÇÃO DE RESPOSTA DE DUVIDAS OU PERGUNTAS\n   a. Componha uma resposta clara, empática e objetiva no campo \"message\"\n   b. Inclua no campo \"link\" a URL exata da fonte (sem mencioná-la no texto)\n   c. Termine com: \"Essa resposta resolveu sua dúvida?\" somente em respostas a dúvidas\n   d. Mantenha o campo \"status\" como string vazia (\"\")\n\n4. CONTROLE DE TENTATIVAS\n   - Mantenha internamente uma contagem de tentativas para cada dúvida\n   - Após 3 tentativas sem resolução, defina status como \"### fora do escopo ###\"\n   - Reinicie a contagem quando um novo tópico for iniciado pelo cliente\n\n🔄 FLUXO DE ATENDIMENTO EM CASO DE PROBLEMA COM ASSINATURA/PALTAFORMA\n\n1. VERIFIQUE O PLANO DO CLIENTE\n   - Se a mensagem do cliente for relacionado a sua assinatura ou perda de acesso, responda com a seguinte mensagem:\n\n      '''Você utilizava nosso CRM gratuito? Se sim responda essa mensagem com \"Venda+\" para seguir com seu atendimento!\n\n         Caso você não utilizava ele e esteja enfrentando problemas, descreva o problema para que eu possa prestar o suporte necessário. \n      '''\n\n   - Esta mensagem será usada para definir a maneira que você continuará o atendimento\n   - Defina o campo \"link\" como string vazia (\"\")\n   - Mantenha o campo \"status\" como string vazia (\"\")\n\n2. CASO O CLIENTE RESPONDA \"Venda+\"\n   - Retorne a seguinte mensagem para o cliente:\n\n      '''\n        Se você utilizava o nosso CRM gratuito, chegou o momento de evoluir com a gente. Ele agora se chama Venda+, e oferece muito mais controle, velocidade e resultados.\n\n⚠️ Faça seu upgrade agora, pois ocorrerão mudanças automáticas. Para não perder suas automatizações, leads salvos no Venda+ e imóveis no site adicionados, entre em contato com um de nossos executivos 👉\n      '''\n\n   - Retorne no campo \"link\" o seguinte link: \"https://wa.me/554599530121\"\n   - No campo \"status\" retorne: \"### venda ###\"\n\n3. CASO O CLIENTE RESPONDA COM UMA DÚVIDA QUE NÃO É SOBRE O VENDA+\n  - Continue com o atendimento normalmente a partir do seu fluxo de atendimento passado\n  - Defina o campo \"link\" como string vazia (\"\")\n  - Mantenha o campo \"status\" como string vazia (\"\")\n\n# 🔄 FLUXO DE CANCELAMENTO\n\n## 1. IDENTIFICAÇÃO DA INTENÇÃO DE CANCELAMENTO\n\n- Verifique se o cliente demonstra intenção de cancelamento usando expressões como: `\"cancelar\"`, `\"encerrar plano\"`, `\"quero sair\"`, etc.\n- Ao identificar a intenção, use **exatamente** o seguinte retorno para solicitar o motivo:\n\n```json\n{\n  \"message\": \"Sentimos muito por saber que você está considerando o cancelamento 😞\\n\\nPara que possamos entender melhor e registrar sua solicitação corretamente, você poderia nos contar o motivo da sua decisão?\",\n  \"link\": \"\",\n  \"status\": \"\"\n}\n```\n\n---\n\n## 2. CLASSIFICAÇÃO DO MOTIVO DE CANCELAMENTO\n\n- Quando o cliente responder o motivo da decisão, **classifique o motivo usando exclusivamente uma das seguintes categorias**:\n\n  - `Financeiro`\n  - `Usabilidade`\n  - `Dados`\n  - `Pessoais`\n  - `Encerramento de atividades`\n  - `Outros`\n\n- Em seguida, **retorne exatamente a classificação como texto** no campo `\"message\"` **sem frases adicionais**, e adicione o status de cancelamento como no exemplo abaixo:\n\n```json\n{\n  \"message\": \"Financeiro\", // Substitua por uma das categorias acima\n  \"link\": \"\",\n  \"status\": \"### cancelamento ###\"\n}\n```\n\n---\n\n### ⚠️ Importante\n\n- **Não inclua explicações ou frases completas.**  \n- O campo `\"message\"` deve conter **apenas** a categoria classificada, com **exata correspondência** com as opções listadas.  \n- Se não for possível classificar com clareza, use `\"Outros\"`.\n\n🔄 FEEDBACK DO CLIENTE\n\n- Se o cliente confirmar explicitamente que a dúvida foi resolvida (com frases como \"sim, resolveu\", \"obrigado, agora entendi\", \"está claro agora\", etc.), defina o status como \"### resolvido ###\"\n- Se o cliente indicar que a resposta não resolveu sua dúvida após 3 tentativas, defina o status como \"### fora do escopo ###\"\n- Se o cliente fizer uma nova pergunta, mesmo após confirmar resolução anterior, trate como um novo atendimento (status vazio)\n\n🔎 INTERPRETAÇÃO DE PERGUNTAS\n\n1. PERGUNTAS AMBÍGUAS\n   - Presuma que a dúvida se refere a funcionalidades ou uso da plataforma Brokers\n   - Busque interpretar a intenção real por trás da pergunta\n   - Se possível, responda com base na parte mais relevante da informação da RAG\n\n2. PERGUNTAS COMPLEXAS\n   - Divida perguntas complexas em partes e responda de forma organizada\n   - Mantenha o foco nas informações disponíveis na RAG\n   - Se alguma parte estiver fora do escopo, indique claramente o que pode e o que não pode responder\n\n3. IDENTIFICAÇÃO AUTOMÁTICA DE CONTEÚDO FORA DO ESCOPO\n   - Se a pergunta mencionar explicitamente vendas, preços, contratos, ou outros temas fora do escopo\n   - Se a RAG não retornar conteúdo relevante após consulta\n   - Se o cliente insistir em tema já identificado como fora do escopo\n\n💼 FORMATO OBRIGATÓRIO DO RETORNO\n\nTodas as respostas devem ser formatadas como JSON exatamente neste formato:\n\n{\n   \"message\": \"Sua resposta completa à dúvida do cliente, incluindo saudação inicial e pergunta final sobre resolução\",\n   \"link\": \"URL do artigo relevante ou string vazia se não houver\",\n   \"status\": \"### resolvido ### ou ### fora do escopo ### ou string vazia\"\n}\n\n⚠️ REGRAS CRÍTICAS PARA O RETORNO:\n\n1. O campo \"message\":\n   - Deve conter APENAS a resposta textual ao cliente\n   - NUNCA deve incluir links diretos ou referências ao link\n   - NUNCA deve incluir status, os status ### resolvido ### ou ### fora do escopo ### são exclusivos do campo status\n   - Somente deve terminar com \"Essa resposta resolveu sua dúvida? Posso te ajudar com mais alguma coisa?\" em caso de resposta a dúvidas e NUNCA em saudações ou primeira mensagem\n   - Deve ser escrito em tom profissional, empático e objetivo\n\n2. O campo \"link\":\n   - Deve conter APENAS a URL do artigo relevante\n   - Use string vazia (\"\") se não houver link ou na primeira interação\n   - NUNCA inclua o link no texto da mensagem principal\n\n3. O campo \"status\":\n   - Use \"### resolvido ###\" APENAS quando o cliente confirmar explicitamente que a dúvida foi sanada\n   - Use \"### fora do escopo ###\" quando:\n     * A pergunta estiver fora das capacidades do agente\n     * Após 3 tentativas sem resolução\n     * A RAG não retornar conteúdo relevante\n   - Use string vazia (\"\") em todos os outros casos para continuar a conversa\n\n💬 TOM DE VOZ\n- Profissional e cordial: use linguagem formal mas acessível\n- Empático e acolhedor: demonstre compreensão do problema\n- Objetivo e direto: vá direto ao ponto, sem rodeios desnecessários\n- Solícito: sempre se mostre disponível para ajudar com novas dúvidas"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -2656,
+        624
+      ],
+      "id": "65247838-49bf-4606-98bd-99bafad0c87e",
+      "name": "AI Agent1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"🚩 Fora do escopo: <b>{{ $('Get user').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        288
+      ],
+      "id": "210213c9-b8b9-496e-b7b3-65a0aca91025",
+      "name": "Envia fora do escopo",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"Infelizmente, não consigo te ajudar com esse assunto, mas vou te encaminhar para um atendente humano que poderá te auxiliar melhor. Não se preocupe, ele tem superpoderes para resolver isso!\\n\\n(horários de atendimento humano: De segunda a sexta, das 8h30 às 12h00 e das 13h30 às 17h30)\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('loop conversas').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        288
+      ],
+      "id": "dfe3adbd-b450-49a9-880b-78f5445824cf",
+      "name": "Mandar msg - negação"
+    },
+    {
+      "parameters": {
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        288
+      ],
+      "id": "e6d75d95-e75a-4ab2-977e-92cb84836bf3",
+      "name": "get - conversa"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \n\t\"status\": \"new\",\n\t\"assigned_group_id\": \"e2e2112e-9f39-4cb5-8887-090c97f933a6\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        288
+      ],
+      "id": "c293f871-ca92-41cb-a81b-5b5050c30004",
+      "name": "update conversa - new"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "metricas_suporte",
+          "mode": "list",
+          "cachedResultName": "metricas_suporte"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "created_at": "={{ $now }}",
+            "conversation_id": "={{ $json.conversation_id }}",
+            "status": "Não resolvido"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        544,
+        288
+      ],
+      "id": "6168edce-0356-4720-aef2-d68abf67162d",
+      "name": "inserir - não resolvido",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"Fico feliz em ter ajudado!! Tenha um bom dia!\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('loop conversas').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        608
+      ],
+      "id": "3a83fdde-8072-4aa9-8f24-692ff479aa9e",
+      "name": "Mandar msg - agradecimento"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \n\t\"status\": \"resolved\",\n    \"assigned_agent_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        608
+      ],
+      "id": "480f9221-1d05-4576-bd7d-eb90ed58b9c7",
+      "name": "Update conversa - Resolvida"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "metricas_suporte",
+          "mode": "list",
+          "cachedResultName": "metricas_suporte"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "created_at": "={{ $now }}",
+            "conversation_id": "={{ $json.conversation_id }}",
+            "status": "Resolvido"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        320,
+        608
+      ],
+      "id": "3f24844a-d1d9-4c59-b5d1-6673a627883b",
+      "name": "Inserir - Resolvida",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2603b30d-d686-449c-ad17-7373cfb83d7c",
+              "leftValue": "={{ $json.text.link }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -464,
+        1344
+      ],
+      "id": "bbf44a6d-18ce-4799-a406-cad1dc8fcea4",
+      "name": "Tem artigo?"
+    },
+    {
+      "parameters": {
+        "jsCode": "let text = $('caminho').first().json.text.message\n\ntext = text.replace(/\\\\/g, '')       \n           .replace(/\"/g, '')        \n           .replace(/\\n/g, '\\\\n')\n           .replace(/\\r/g, '')      \n           .replace(/\\*\\*/g, '');\n\nlet retorno = { content: text }\nreturn retorno"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        1248
+      ],
+      "id": "27325ab7-48a8-42f8-ab18-9edc2236a068",
+      "name": "formatador de texto"
+    },
+    {
+      "parameters": {
+        "jsCode": "let text = $('caminho').first().json.text.message\n\ntext = text.replace(/\\\\/g, '')       \n           .replace(/\"/g, '')        \n           .replace(/\\n/g, '\\\\n')\n           .replace(/\\r/g, '')      \n           .replace(/\\*\\*/g, '');\n\nlet retorno = { content: text }\nreturn retorno"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        1520
+      ],
+      "id": "08f738dc-023d-40c5-973a-4d523a769023",
+      "name": "formatador de texto1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"{{ $json.content }}\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('loop conversas').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        1248
+      ],
+      "id": "946b672e-a65e-48ed-97a0-df867964de1a",
+      "name": "Enviar mensagem - sem artigo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"{{ $json.content }}\"\n      }\n    },\n    {\n      \"url_button\": {\n        \"url\": \"{{ $('caminho').item.json.text.link }}\",\n        \"label\": \"Artigo\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('loop conversas').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        1520
+      ],
+      "id": "fabca6cd-bd90-4dd5-a940-87e3c5c692f7",
+      "name": "Enviar mensagem - com artigo"
+    },
+    {
+      "parameters": {
+        "url": "=https://eemovel1.freshchat.com/v2/users/{{ $('loop conversas').item.json.user_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        992,
+        288
+      ],
+      "id": "a85ef27b-4fea-405d-966f-3c42697e90c6",
+      "name": "Get user"
+    },
+    {
+      "parameters": {
+        "url": "=https://eemovel1.freshchat.com/v2/users/{{ $('loop conversas').item.json.user_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        608
+      ],
+      "id": "99de5c62-017a-44dd-be0c-de680dff5092",
+      "name": "Get user1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"🟢 Finalizado: <b>{{ $('Get user1').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user1').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        992,
+        608
+      ],
+      "id": "e1b35025-dcc8-41d1-abbf-c10b15f508ab",
+      "name": "Envia finalizado",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f9663a55-7859-4698-9ffd-d8d1bf2f2f39",
+                    "leftValue": "={{ $json.text.status || $json.text.message }}",
+                    "rightValue": "### venda ###",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "venda+"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.text.status || $json.text.message }}",
+                    "rightValue": "### fora do escopo ###",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f2c232fe-fc25-4259-a566-ed225ca4d0ac"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Fora do escopo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6fdab264-78f7-4335-90fb-0993ea3e5973",
+                    "leftValue": "={{ $json.text.status || $json.text.message }}",
+                    "rightValue": "### resolvido ###",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Resolvido"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2b8e969c-6539-4325-a987-337f764ef406",
+                    "leftValue": "={{ $json.text.status || $json.text.message }}",
+                    "rightValue": "### cancelamento ###",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Cancelamento"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1088,
+        592
+      ],
+      "id": "d59f65f1-5778-456e-b577-8397d4c12653",
+      "name": "caminho"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": true,
+            "id": "={{ $('loop conversas').item.json.assistente_conversa_id }} "
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        544,
+        608
+      ],
+      "id": "c8d60332-7296-48c0-9d04-3ae6e1741c87",
+      "name": "resolver - id interação",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": true,
+            "fora_escopo": true,
+            "id": "={{ $('loop conversas').item.json.assistente_conversa_id }} "
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        768,
+        288
+      ],
+      "id": "5a059a00-e85c-4e80-abb2-0179c6b02846",
+      "name": "resolver - interação fora escopo",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n\t*\nfrom brokers_cs.cadencia_close_conversa ccc\nwhere ccc.id_interacao = {{ $('loop conversas').item.json.assistente_conversa_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4496,
+        608
+      ],
+      "id": "6efd34d7-ca4d-4e23-b821-2047c7569475",
+      "name": "era pra finalizar?",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "30f04f3b-f8d6-4f09-b14c-3d680fe492ac",
+              "leftValue": "={{ $('era pra finalizar?').item.json.isEmpty() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -4176,
+        608
+      ],
+      "id": "e2197269-5e38-4ad1-8a7c-9059ee5ecbaa",
+      "name": "se sim"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n\tac.id as assistente_conversa_id,\n    ac.interaction_id,\n    ac.conversation_id,\n    ac.user_id,\n    ARRAY_AGG(acm.id) AS ids_mensagens,\n    STRING_AGG(acm.message, E'\\n') AS mensagens\nFROM \n    brokers_cs.assistente_conversas AS ac\nINNER JOIN \n    brokers_cs.assistente_conversas_mensagens AS acm \n    ON ac.id = acm.assistente_conversa\nWHERE \n    acm.read = false \n    AND ac.closed = false\n    AND ac.plataforma != 'dev'\nGROUP BY\n    ac.id, ac.conversation_id, ac.user_id, ac.interaction_id;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -5440,
+        592
+      ],
+      "id": "90d4f02d-ee50-4322-8fce-f9a3b2b7f646",
+      "name": "Pegar mensagens",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -5088,
+        592
+      ],
+      "id": "cc85ba32-3b8d-4f2d-9906-23573255a301",
+      "name": "loop conversas"
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cadencia_close_conversa",
+          "mode": "list",
+          "cachedResultName": "cadencia_close_conversa"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "id",
+              "value": "={{ $('era pra finalizar?').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3856,
+        304
+      ],
+      "id": "7b58ffbf-9c2b-4591-be52-99e4b1ed82ce",
+      "name": "deletar registro de fechamento",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let motivo = $(\"formata mensagem - agente\").item.json.text.message\nlet user_id = $('loop conversas').item.json.user_id\nlet conversation_id = $('loop conversas').item.json.conversation_id\nlet id_registro = $('loop conversas').item.json.assistente_conversa_id\n\nreturn {motivo, user_id, conversation_id, id_registro}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        960
+      ],
+      "id": "7b2730b8-0309-4c38-8beb-8c3ab8627bb2",
+      "name": "gather info"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "pwVOWOfdW0SJtC9r",
+          "mode": "list",
+          "cachedResultName": "Jurema_cancelamento_execution_v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        960
+      ],
+      "id": "5d8e01f3-22f7-405b-8b21-69a24f15b364",
+      "name": "Cancelamento Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "let text = $('caminho').first().json.text.message\n\ntext = text.replace(/\\\\/g, '')       \n           .replace(/\"/g, '')        \n           .replace(/\\n/g, '\\\\n')\n           .replace(/\\r/g, '')      \n           .replace(/\\*\\*/g, '');\n\nlet retorno = { content: text }\nreturn retorno"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        -64
+      ],
+      "id": "d8fc320f-c27d-4c92-8506-848a00eb6499",
+      "name": "formatador de texto2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message_parts\": [\n    {\n      \"text\": {\n        \"content\": \"{{ $json.content }}\"\n      }\n    },\n    {\n      \"url_button\": {\n        \"url\": \"{{ $('caminho').item.json.text.link }}\",\n        \"label\": \"Whatsapp\"\n      }\n    }\n  ],\n  \"message_type\": \"normal\",\n  \"actor_type\": \"agent\",\n  \"user_id\": \"{{ $('loop conversas').item.json.user_id }}\",\n  \"actor_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        -64
+      ],
+      "id": "a0fe3a1f-7ad8-45c0-b331-0d798828da72",
+      "name": "Enviar mensagem - com artigo1"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://eemovel1.freshchat.com/v2/conversations/{{ $('loop conversas').item.json.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \n\t\"status\": \"resolved\",\n    \"assigned_agent_id\": \"5c80c8d3-7846-4f28-951a-da9ca27a4d1c\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -64
+      ],
+      "id": "a26e9408-5f09-4e51-9cb7-b2d2e8ea414f",
+      "name": "Update conversa - Resolvida1"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "metricas_suporte",
+          "mode": "list",
+          "cachedResultName": "metricas_suporte"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "created_at": "={{ $now }}",
+            "conversation_id": "={{ $json.conversation_id }}",
+            "status": "Resolvido"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        544,
+        -64
+      ],
+      "id": "a4bddcd9-3031-4c0d-aa5a-ab28f7f03e13",
+      "name": "Inserir - Resolvida1",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "assistente_conversas",
+          "mode": "list",
+          "cachedResultName": "assistente_conversas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "closed": true,
+            "id": "={{ $('loop conversas').item.json.assistente_conversa_id }} "
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "interaction_id",
+              "displayName": "interaction_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fora_escopo",
+              "displayName": "fora_escopo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        768,
+        -64
+      ],
+      "id": "523cd7e0-3be4-40c9-8074-98f0c07f65c2",
+      "name": "resolver - id interação1",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://eemovel1.freshchat.com/v2/users/{{ $('loop conversas').item.json.user_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJpS216TTVkenRIWmprdmdSY3VrVHgxTzJ2SFlTM0U5YmVJME9XbXRNR1ZzIn0.eyJqdGkiOiIwNzkxMjM2YS04MDEzLTQ3MDYtYjA4OS1jMjI4NjhjNjZkYmEiLCJleHAiOjE5MjAzOTU4MjYsIm5iZiI6MCwiaWF0IjoxNjA1MDM1ODI2LCJpc3MiOiJodHRwOi8vaW50ZXJuYWwtZmMtdXNlMS0wMC1rZXljbG9hay1vYXV0aC0xMzA3MzU3NDU5LnVzLWVhc3QtMS5lbGIuYW1hem9uYXdzLmNvbS9hdXRoL3JlYWxtcy9wcm9kdWN0aW9uIiwiYXVkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4Iiwic3ViIjoiMDkyN2E1ZjEtZWFkNi00YjNlLWFhOTgtOTc3NDcyZjA5YTcxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTk1MjYwODMtMzk2Zi00YWNjLWFmZDItNmQ3Yjc4NTE2Y2M5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJhZ2VudDp1cGRhdGUgbWVzc2FnZTpjcmVhdGUgYWdlbnQ6Y3JlYXRlIG1lc3NhZ2U6Z2V0IGRhc2hib2FyZDpyZWFkIHJlcG9ydHM6ZXh0cmFjdDpyZWFkIHJlcG9ydHM6cmVhZCBhZ2VudDpyZWFkIGNvbnZlcnNhdGlvbjp1cGRhdGUgdXNlcjpkZWxldGUgY29udmVyc2F0aW9uOmNyZWF0ZSBvdXRib3VuZG1lc3NhZ2U6Z2V0IG91dGJvdW5kbWVzc2FnZTpzZW5kIHVzZXI6Y3JlYXRlIHJlcG9ydHM6ZmV0Y2ggdXNlcjp1cGRhdGUgdXNlcjpyZWFkIGJpbGxpbmc6dXBkYXRlIHJlcG9ydHM6ZXh0cmFjdCBjb252ZXJzYXRpb246cmVhZCIsImNsaWVudElkIjoiNDIyMTllNjctMzJlMi00YjJhLTliZTYtMjY2Y2ZjOGY3YTY4IiwiY2xpZW50SG9zdCI6IjE5Mi4xNjguMTI4LjE1OSIsImNsaWVudEFkZHJlc3MiOiIxOTIuMTY4LjEyOC4xNTkifQ.e778GGJqM7IGJP_JkYcSfJ_TiIOqsdIK41lkXuDlOTEArUntB8E3Xb_AwJMFXkFpYTa4t7Krp55dPn_o9jruPdJhKei9JqFWdKNH275OxwO__g7zqf-3WZZCBbcGoqI5XVDseaLlGz8EbUDeiELXkGOWwfm4gdJ8Hz1lddsLO96171QLZuzAGuZVSSCr0Ba92snMJHPuEXkryqjHYm0TH778CWSnTGsY194WxPetuU9hBYvQcetWyD9ZQ8J5Ylc20Gvm5RO5g7z6UPPv1-gb-Zta1-VKFDS5548e7qImv0mj_MX-f6OBzsnYkjOhGtg0CCEJ8bKH2KzpgUs2AltfmQ"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        992,
+        -64
+      ],
+      "id": "f8aa59cd-4eb5-454e-a5f0-e70f3835d71a",
+      "name": "Get user2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAAA4XIMFCs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=42DqXeeDAEH66O_aJg8njq0Uxcyjd0G2ZhxJykWL_4A",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cardsV2\": [\n    {\n      \"cardId\": \"info_card\",\n      \"card\": {\n        \"header\": {\n          \"title\": \"🟢 Finalizado: <b>{{ $('Get user2').item.json.first_name }}</b>\",\n          \"subtitle\": \"Contato - <b>{{ $('Get user2').item.json.phone }}</b>\",\n        \"imageUrl\":\"https://fonts.gstatic.com/s/i/materialicons/info/v14/24px.svg\",\n          \"imageType\": \"SQUARE\"\n        }\n          }\n      }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        -64
+      ],
+      "id": "476992a9-38e7-41d5-9f12-314850fd5db2",
+      "name": "Envia finalizado1",
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Pegar mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres6": {
+      "main": [
+        [
+          {
+            "node": "formata mensagem - agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Postgres11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres11": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "era pra finalizar?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "loop conversas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formata mensagem - agente": {
+      "main": [
+        [
+          {
+            "node": "caminho",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Postgres6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia fora do escopo": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mandar msg - negação": {
+      "main": [
+        [
+          {
+            "node": "get - conversa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get - conversa": {
+      "main": [
+        [
+          {
+            "node": "update conversa - new",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update conversa - new": {
+      "main": [
+        [
+          {
+            "node": "inserir - não resolvido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inserir - não resolvido": {
+      "main": [
+        [
+          {
+            "node": "resolver - interação fora escopo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mandar msg - agradecimento": {
+      "main": [
+        [
+          {
+            "node": "Update conversa - Resolvida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update conversa - Resolvida": {
+      "main": [
+        [
+          {
+            "node": "Inserir - Resolvida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inserir - Resolvida": {
+      "main": [
+        [
+          {
+            "node": "resolver - id interação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tem artigo?": {
+      "main": [
+        [
+          {
+            "node": "formatador de texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "formatador de texto1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatador de texto": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensagem - sem artigo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatador de texto1": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensagem - com artigo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar mensagem - sem artigo": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar mensagem - com artigo": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user": {
+      "main": [
+        [
+          {
+            "node": "Envia fora do escopo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user1": {
+      "main": [
+        [
+          {
+            "node": "Envia finalizado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia finalizado": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "caminho": {
+      "main": [
+        [
+          {
+            "node": "formatador de texto2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mandar msg - negação",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mandar msg - agradecimento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "gather info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tem artigo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resolver - id interação": {
+      "main": [
+        [
+          {
+            "node": "Get user1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resolver - interação fora escopo": {
+      "main": [
+        [
+          {
+            "node": "Get user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "era pra finalizar?": {
+      "main": [
+        [
+          {
+            "node": "se sim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "se sim": {
+      "main": [
+        [
+          {
+            "node": "deletar registro de fechamento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pegar mensagens": {
+      "main": [
+        [
+          {
+            "node": "loop conversas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "loop conversas": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deletar registro de fechamento": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gather info": {
+      "main": [
+        [
+          {
+            "node": "Cancelamento Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatador de texto2": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensagem - com artigo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar mensagem - com artigo1": {
+      "main": [
+        [
+          {
+            "node": "Update conversa - Resolvida1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update conversa - Resolvida1": {
+      "main": [
+        [
+          {
+            "node": "Inserir - Resolvida1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inserir - Resolvida1": {
+      "main": [
+        [
+          {
+            "node": "resolver - id interação1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "resolver - id interação1": {
+      "main": [
+        [
+          {
+            "node": "Get user2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user2": {
+      "main": [
+        [
+          {
+            "node": "Envia finalizado1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia finalizado1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b2d5b3b1-57b6-433c-a0dc-6ba68e9eb3c4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "JzwmM2hHWoEuwKzz",
+  "tags": [
+    {
+      "createdAt": "2025-05-05T21:01:26.829Z",
+      "updatedAt": "2025-05-05T21:01:26.829Z",
+      "id": "poPYlNDz1nhN1f3Q",
+      "name": "JUREMA_PROD"
+    }
+  ]
+}

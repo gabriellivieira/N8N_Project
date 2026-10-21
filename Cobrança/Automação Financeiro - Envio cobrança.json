@@ -1,0 +1,1499 @@
+{
+  "name": "Automação Financeiro - Envio cobrança",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */2 7-18 * * mon-fri"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -4544,
+        1408
+      ],
+      "id": "dad0e604-8d8e-478c-9766-8d7be349ac5f",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cobrança de pagamento enviada 2 dias antes do vencimento",
+        "done": "1",
+        "type": "Confirmar Pagamento",
+        "additionalFields": {
+          "person_id": "={{ $('registro').last().json.crm_type_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        288
+      ],
+      "id": "f70eacd9-011c-46be-871c-fff68ecf6298",
+      "name": "Pipedrive",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select *\nFROM brokers_cs.cobranca_cadencia cc\nWHERE status = false\n  and erro_envio = false\n  AND data_max_envio::date >= CURRENT_DATE\nlimit 1;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4144,
+        1408
+      ],
+      "id": "5f614539-ebec-4cb6-9e41-4c0d18f6ca31",
+      "name": "registro",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": true,
+            "id": "={{ $('registro').first().json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mandar_suporte",
+              "displayName": "mandar_suporte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        560,
+        752
+      ],
+      "id": "a95de016-b3ab-4eba-985f-ba371d2a64ff",
+      "name": "update_registro",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('registro').last().json.tempo_cobranca }}",
+                    "rightValue": "+2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5e074375-c919-4707-bb86-7ee8535c468f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "+2"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e0f7ff93-793c-4c0e-bd82-0f1cfea27dca",
+                    "leftValue": "={{ $('registro').last().json.tempo_cobranca }}",
+                    "rightValue": "0",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "No dia"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4812f374-a575-4520-bdad-a7cbe4f9ba4b",
+                    "leftValue": "={{ $('registro').last().json.tempo_cobranca }}",
+                    "rightValue": "-",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "inadimplente"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -304,
+        464
+      ],
+      "id": "5d22977c-93f3-4ff9-94ea-4211fa2edd72",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('registro').last().json.crm_type }}",
+                    "rightValue": "person",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "87954e29-eadc-4a44-8c80-32edc022ce4e"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "person"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "81a35ec5-6718-426c-a647-9dfca333a41b",
+                    "leftValue": "={{ $('registro').last().json.crm_type }}",
+                    "rightValue": "organization",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "organization"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -768,
+        720
+      ],
+      "id": "efec3022-2f96-4930-b621-59c37e4acdf0",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('registro').last().json.tempo_cobranca }}",
+                    "rightValue": "+2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5e074375-c919-4707-bb86-7ee8535c468f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "+2"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e0f7ff93-793c-4c0e-bd82-0f1cfea27dca",
+                    "leftValue": "={{ $('registro').last().json.tempo_cobranca }}",
+                    "rightValue": "0",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "No dia"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4812f374-a575-4520-bdad-a7cbe4f9ba4b",
+                    "leftValue": "={{ $('registro').last().json.tempo_cobranca }}",
+                    "rightValue": "-",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "inadimplente"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -304,
+        1008
+      ],
+      "id": "3649ab9d-34fc-4b77-978a-e57b96485066",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cobrança de pagamento enviada no dia do vencimento",
+        "done": "1",
+        "type": "Confirmar Pagamento",
+        "additionalFields": {
+          "person_id": "={{ $('registro').last().json.crm_type_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        464
+      ],
+      "id": "762d6c65-ab02-493f-bbde-60cad00c89e3",
+      "name": "Pipedrive1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "=Cobrança de pagamento enviada {{ $('registro').last().json.tempo_cobranca.replace('-', '') }} após o vencimento da fatura",
+        "done": "1",
+        "type": "Confirmar Pagamento",
+        "additionalFields": {
+          "person_id": "={{ $('registro').last().json.crm_type_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        640
+      ],
+      "id": "a4932e6d-f8fd-41bf-881d-3da35cb194f2",
+      "name": "Pipedrive2",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cobrança de pagamento enviada 2 dias antes do vencimento",
+        "done": "1",
+        "type": "Confirmar Pagamento",
+        "additionalFields": {
+          "org_id": "={{ $('registro').last().json.crm_type_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        832
+      ],
+      "id": "fa6815a3-de93-477c-9350-3fdbfeefb5e1",
+      "name": "Pipedrive3",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "Cobrança de pagamento enviada no dia do vencimento",
+        "done": "1",
+        "type": "Confirmar Pagamento",
+        "additionalFields": {
+          "org_id": "={{ $('registro').last().json.crm_type_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1008
+      ],
+      "id": "019ee8dc-cc28-4fe4-b0b1-127b9e0cb783",
+      "name": "Pipedrive5",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "=Cobrança de pagamento enviada {{ $('registro').last().json.tempo_cobranca.replace('-', '') }} após o vencimento da fatura",
+        "done": "1",
+        "type": "Confirmar Pagamento",
+        "additionalFields": {
+          "org_id": "={{ $('registro').last().json.crm_type_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1184
+      ],
+      "id": "9958d27f-c29c-49ab-b05f-8f120be7614a",
+      "name": "Pipedrive4",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "APDKKeKdQjaK8TBU",
+          "name": "Gabriela_pipedrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_cadencia",
+          "mode": "list",
+          "cachedResultName": "cobranca_cadencia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('registro').item.json.id }}",
+            "erro_envio": true,
+            "status": true
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cliente_nome",
+              "displayName": "cliente_nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_whatsapp",
+              "displayName": "cliente_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cliente_phone",
+              "displayName": "cliente_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_max_envio",
+              "displayName": "data_max_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "crm_type",
+              "displayName": "crm_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "crm_type_id",
+              "displayName": "crm_type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tempo_cobranca",
+              "displayName": "tempo_cobranca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "erro_envio",
+              "displayName": "erro_envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "mandar_suporte",
+              "displayName": "mandar_suporte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -448,
+        1792
+      ],
+      "id": "2fadb307-6553-4e71-81ce-e667a9f3b995",
+      "name": "update_registro1",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.attemics.com.br/core/v2/api/contacts/number/{{ $('registro').item.json.cliente_whatsapp.replace(\"+\", \"\")}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3808,
+        1408
+      ],
+      "id": "0e93997a-7764-4134-b0ef-4f7ab3ba14a7",
+      "name": "Buscar contato attemics",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.attemics.com.br/core/v2/api/chats/send-text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contactId\": \"{{ $('Buscar contato attemics').item.json.id }}\",\n  \"message\": \"{{ $('registro').item.json.mensagem.replace(/\\r?\\n/g, '\\\\n') }}\",\n  \"isWhisper\": false,\n  \"forceSend\": true,\n  \"verifyContact\": false,\n  \"delayInSeconds\": 1,\n  \"linkPreview\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1488,
+        1360
+      ],
+      "id": "0318b2e2-b592-4345-bc4c-0869cfe3b3dd",
+      "name": "Enviar mensagem - Attemics",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chat.googleapis.com/v1/spaces/AAQAk_SnhYs/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=JdXq4HHfW5lCAym5YxyHbK1SPPVudXWShfIET7eHrvU",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cards\": [\n    {\n      \"header\": {\n        \"title\": \"🚨 Erro ao Enviar Mensagem\",\n        \"subtitle\": \"Detalhes do erro\"\n      },\n      \"sections\": [\n        {\n          \"widgets\": [\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Nome\",\n                \"content\": \"{{ $('registro').last().json.cliente_nome }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Email\",\n                \"content\": \"{{ $('registro').last().json.email }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Data\",\n                \"content\": \"{{ $now.format('dd/LL/yyyy') }}\"\n              }\n            },\n            {\n              \"keyValue\": {\n                \"topLabel\": \"Número\",\n                \"content\": \"{{ $('registro').last().json.cliente_whatsapp }}\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -784,
+        1792
+      ],
+      "id": "24cb92e2-9873-47b2-9189-55bb3b09af06",
+      "name": "mensagem erro - suporte"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "brokers_cs",
+          "mode": "list",
+          "cachedResultName": "brokers_cs"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cobranca_attemics_contact",
+          "mode": "list",
+          "cachedResultName": "cobranca_attemics_contact"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_contato": "={{ $('registro').first().json.id }}",
+            "chat_id": "={{ $('Criar atendimento').item.json.chatId || $('Buscar contato attemics').item.json.curChatId }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id_contato",
+              "displayName": "id_contato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "closed",
+              "displayName": "closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1440,
+        752
+      ],
+      "id": "b6e531e8-a833-4aeb-81ef-52bc51738529",
+      "name": "criar registro - chat attemics",
+      "credentials": {
+        "postgres": {
+          "id": "44hulJmDXVz8iWYL",
+          "name": "multi-agent"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1008,
+        752
+      ],
+      "id": "3b83dcd5-2405-4ae8-8a34-f07f0339365d",
+      "name": "Wait",
+      "webhookId": "3bd99210-eae7-4dd4-b402-9400560cc131"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.attemics.com.br/core/v2/api/chats/create-new",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\"number\": \"{{$('registro').item.json.cliente_whatsapp}}\",\n\"contactId\": \"{{$('Buscar contato attemics').item.json.id}}\",\n\"sectorId\": \"67a26739d46e43bc4aaad13f\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2864,
+        1392
+      ],
+      "id": "26cb3f99-08c2-43d1-91fe-7616210db0ec",
+      "name": "Criar atendimento",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e7645cfd-80a5-46ee-b5ff-ca6fb916a630",
+              "leftValue": "={{ $('Buscar contato attemics').item.json.error.message }}",
+              "rightValue": "Contact not found!",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3680,
+        2224
+      ],
+      "id": "88d27b11-d5f5-4837-a9e3-4de6759800e5",
+      "name": "contato existe?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8a1cb5b6-bacc-46b1-8797-202ccb2d42b6",
+              "leftValue": "={{ $('Criar atendimento').item.json.error.message }}",
+              "rightValue": "Chat already openned",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2320,
+        1520
+      ],
+      "id": "eebac31f-9204-4ce4-84ad-fa61d8f3d0e1",
+      "name": "já tem atendimento?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.attemics.com.br/core/v2/api/contacts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "access-token\t",
+              "value": "67a2699e326b87ac524ae02f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"nickName\": \"{{ $('registro').item.json.cliente_nome }}\",\n  \"email\": \"{{ $('registro').item.json.email }}\",\n  \"number\": \"{{ $('registro').item.json.cliente_whatsapp}}\",\n  \"observation\": \"Cliente criado para cobrança\",\n  \"updateIfExists\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3328,
+        1968
+      ],
+      "id": "e498af15-ca90-42b7-9ea9-fcf5cd5798d8",
+      "name": "Criar contato",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -4016,
+        1888
+      ],
+      "id": "45d0b5d0-f4b5-4f84-b23a-a59200bbc006",
+      "name": "Wait1",
+      "webhookId": "fdc5d9aa-9011-48a6-96a3-91d65b85e4d8"
+    }
+  ],
+  "pinData": {
+    "registro": [
+      {
+        "json": {
+          "id": 3963,
+          "cliente_nome": "Marlene rodrigues martinez",
+          "cliente_whatsapp": "+5511947303258",
+          "cliente_phone": "+5511947303258",
+          "data_vencimento": "2025-10-11T21:00:00.000Z",
+          "status": false,
+          "mensagem": "Olá, Marlene, tudo bem? Essa é uma mensagem automática aqui do financeiro da EEmovel Brokers.\nSua fatura venceu há 2 dias e ainda não identificamos o pagamento. Para evitar a suspensão dos serviços, sugerimos que regularize quanto antes.\n🔗 https://checkout.iugu.com/invoices/85ef5cb6-1f31-4b59-985b-1231b2e12199-02b5\nSe já efetuou o pagamento, por favor, nos informe para atualização do sistema.",
+          "data_max_envio": "2025-10-14T00:00:00.000Z",
+          "created_at": "2025-10-14T06:01:05.406Z",
+          "crm_type": "person",
+          "crm_type_id": "115858",
+          "email": "marlene.creci@gmail.com",
+          "tempo_cobranca": "-2",
+          "erro_envio": false,
+          "mandar_suporte": false
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive": {
+      "main": [
+        [
+          {
+            "node": "update_registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registro": {
+      "main": [
+        [
+          {
+            "node": "Buscar contato attemics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_registro": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pipedrive1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pipedrive2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pipedrive5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pipedrive4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive1": {
+      "main": [
+        [
+          {
+            "node": "update_registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive2": {
+      "main": [
+        [
+          {
+            "node": "update_registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive3": {
+      "main": [
+        [
+          {
+            "node": "update_registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive5": {
+      "main": [
+        [
+          {
+            "node": "update_registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive4": {
+      "main": [
+        [
+          {
+            "node": "update_registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar contato attemics": {
+      "main": [
+        [
+          {
+            "node": "Criar atendimento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "contato existe?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar mensagem - Attemics": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensagem erro - suporte": {
+      "main": [
+        [
+          {
+            "node": "update_registro1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "criar registro - chat attemics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar atendimento": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensagem - Attemics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "já tem atendimento?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contato existe?": {
+      "main": [
+        [
+          {
+            "node": "Criar contato",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "já tem atendimento?": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensagem - Attemics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar contato": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensagem erro - suporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Buscar contato attemics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "707a5265-96ba-4f48-8534-9fa67bc39419",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c2e277e6b5ea2b9a14a2596b64a6982d0861d6176aa7e786778e53f8c50e95e"
+  },
+  "id": "vc4r5bVruiKz6aBX",
+  "tags": [
+    {
+      "createdAt": "2025-04-29T18:08:11.645Z",
+      "updatedAt": "2025-04-29T18:08:11.645Z",
+      "id": "nd6RHGJa9oL2XRr9",
+      "name": "Financeiro"
+    }
+  ]
+}
